@@ -1,0 +1,146 @@
+---
+- hosts: docker
+  tasks:
+    - import_role:
+        name: services
+        tasks_from: docker
+  tags: docker
+
+- hosts: docker
+  roles:
+    - traefik
+  vars:
+    version: v2.4
+    dns: t.{{ lan }}
+  tags: traefik
+
+- hosts: lan
+  roles:
+    - dashy
+  vars:
+    version: latest
+    dns: hub.{{ lan }}
+    exposed_port: 80
+  tags: dashy
+
+- hosts: lan
+  roles:
+    - gatus
+  vars:
+    version: v2.7.0
+    dns: ping.{{ lan }}
+    exposed_port: 8080
+  tags: gatus
+
+- hosts: lan
+  roles:
+    - jenkins
+  vars:
+    version: 2.289.2-lts
+    dns: ci.{{ lan }}
+    exposed_port: 8080
+  tags: jenkins
+
+- hosts: lan
+  roles:
+    - syncthing
+  vars:
+    version: latest
+    dns: sync.{{ lan }}
+    exposed_port: 8384
+  tags: syncthing
+
+- hosts: lan
+  roles:
+    - paperless
+  vars:
+    version: '1.4.5'
+    dns: paper.{{ lan }}
+    exposed_port: 8000
+  tags: paperless
+
+- hosts: lan
+  roles:
+    - alltube
+  vars:
+    version: latest
+    dns: ss.{{ lan }}
+    exposed_port: 80
+  tags: alltube
+
+- hosts: lan
+  roles:
+    - registry
+  vars:
+    version:
+      fe: v2
+      be: '2'
+    dns:
+      fe: registry.{{ lan }}
+      be: reg.{{ lan }}
+    exposed_port:
+      fe: 80
+      be: 5000
+  tags: registry
+
+- hosts: lan
+  roles:
+    - qbittorrent
+  vars:
+    version: latest
+    dns: p2p.{{ lan }}
+    exposed_port: 8080
+  tags: qbittorrent
+
+- hosts: lan
+  roles:
+    - jellyfin
+  vars:
+    version: version-10.7.6-1
+    dns: theatre.{{ lan }}
+    exposed_port: 8096
+  tags: jellyfin
+
+- hosts: wan
+  roles:
+    - kanboard
+  vars:
+    version: v1.2.20
+    dns: kan.{{ domain }}
+    exposed_port: 80
+  tags: kanboard
+
+- hosts: wan
+  roles:
+    - etherpad
+  vars:
+    version: '1.8.0'
+    dns: pad.{{ domain }}
+    exposed_port: 8080
+  tags: etherpad
+
+- hosts: wan
+  roles:
+    - ttrss
+  vars:
+    version: 'latest-2021-06-22'
+    dns: rss.{{ domain }}
+    exposed_port: 80
+  tags: ttrss
+
+- hosts: wan
+  roles:
+    - nextcloud
+  vars:
+    version: '21'
+    dns: cloud.{{ domain }}
+    exposed_port: 80
+  tags: nextcloud
+
+- hosts: wan
+  roles:
+    - rpgbasement
+  vars:
+    dns: rpgbasement.xyz
+    exposed_port: 2368
+  tags: rpgbasement

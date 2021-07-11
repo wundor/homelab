@@ -1,0 +1,4 @@
+---
+- name: restart_main_service
+  shell: 'docker service update --force {{ service }}_{{ service }}'
+  when: 'not stack_deployed.changed'

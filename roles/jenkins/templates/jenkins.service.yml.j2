@@ -1,0 +1,28 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: jenkins/jenkins:{{ version }}
+    # healthcheck:
+    # test: ['CMD', 'curl', '-f', 'http://localhost:8080/login']
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_config
+        target: /var/jenkins_home
+    dns:
+      - 1.1.1.1
+    networks:
+      - {{ traefik_network }}
+
+volumes:
+  {{ service }}_config:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/configs/{{ service }}'
+
+networks:
+  {{ traefik_network }}:
+    external: true

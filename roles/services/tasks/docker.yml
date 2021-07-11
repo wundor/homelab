@@ -1,0 +1,55 @@
+- block:
+    - name: Install packages
+      apt:
+        name: '{{ item }}'
+        update_cache: true
+      loop:
+        - python3-pip
+        - python3-docker
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: 'deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: '{{ item }}'
+        update_cache: true
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+
+    - name: Install docker related pip packages
+      pip:
+        name:
+          - jsondiff # for docker stack deploy
+
+    - name: Adding me to docker group
+      user:
+        name: 'wunder'
+        groups: docker
+        append: yes
+
+    - name: Init docker swarm
+      docker_swarm:
+        state: present
+
+    - name: Create public network
+      docker_network:
+        name: '{{ traefik_network }}'
+        driver: overlay
+        attachable: true
+        force: false
+  become: true

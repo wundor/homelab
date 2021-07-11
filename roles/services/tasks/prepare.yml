@@ -1,0 +1,20 @@
+---
+- name: Set service dir path
+  set_fact:
+    service_path: '{{ root_path }}/{{ service }}'
+  tags: cleanup
+
+- name: Cleanup service directory
+  file:
+    path: '{{ service_path }}'
+    state: absent
+  become: true
+  tags: [ never, cleanup ]
+
+- name: Create service directory
+  file:
+    path: '{{ service_path }}'
+    state: directory
+    owner: '{{ ansible_env.USER }}'
+    group: '{{ ansible_env.USER }}'
+  become: true

@@ -1,0 +1,104 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  redis:
+    image: redis:6
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    networks:
+      - {{ service }}
+
+  db:
+    image: mariadb:10
+    healthcheck:
+      test: ['CMD', 'mysqladmin', '-p$$MYSQL_ROOT_PASSWORD', 'ping']
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ db_root_pass }}
+      - MYSQL_PASSWORD={{ db_pass }}
+      - MYSQL_DATABASE={{ service }}
+      - MYSQL_USER={{ service }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_db
+        target: /var/lib/mysql
+    networks:
+      - {{ service }}
+    deploy:
+      rollback_config:
+        order: stop-first
+
+  cron:
+    image: nextcloud:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service}}_app
+        target: /var/www/html
+      {{ volume_nocopy }}
+        source: {{ service}}_data
+        target: /mnt/nextcloud
+    entrypoint: /cron.sh
+    networks:
+      - {{ service }}
+
+  {{ service }}:
+    image: nextcloud:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: my_data
+        target: /mnt/files
+      {{ volume_nocopy }}
+        source: my_photos
+        target: /mnt/photos
+      {{ volume_nocopy }}
+        source: my_archive
+        target: /mnt/archive
+      {{ volume_nocopy }}
+        source: {{ service }}_app
+        target: /var/www/html
+      {{ volume_nocopy }}
+        source: {{ service }}_data
+        target: /mnt/nextcloud
+    networks:
+      - {{ traefik_network }}
+      - {{ service }}
+    environment:
+            # - APACHE_DISABLE_REWRITE_IP=1
+            # - TRUSTED_PROXIES=172.30.0.0/16
+      - REDIS_HOST=redis
+      - MYSQL_PASSWORD={{ db_pass }}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+      - OVERWRITEHOST={{ dns }}
+      - OVERWRITEPROTOCOL=https
+      - NEXTCLOUD_DATA_DIR=/mnt/nextcloud
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+
+networks:
+  {{ traefik_network }}:
+    external: true
+  {{ service }}:
+
+volumes:
+  my_data:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/files'
+  my_photos:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/photos'
+  my_archive:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/archive'
+  {{ service }}_app:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/app'
+  {{ service }}_data:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/data'
+  {{ service }}_db:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/db'

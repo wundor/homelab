@@ -1,0 +1,59 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: ghost:4
+    environment:
+      url: https://{{ dns }}
+      GHOST_CONTENT: /var/lib/ghost/content
+      NODE_ENV: production
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_content
+        target: /var/lib/ghost/content
+      - type: bind
+        source: {{ service_path }}/ghost-config.json
+        target: /var/lib/ghost/config.production.json
+        read_only: true
+    networks:
+      - {{ traefik_network }}
+
+  podhost:
+    image: nginx:1.21
+    environment:
+      - TZ=Europe/Moscow
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.podhost.rule=Host(`host.{{ dns }}`)'
+        - 'traefik.http.routers.podhost.tls=true'
+        - 'traefik.http.routers.podhost.entrypoints=https'
+        - 'traefik.http.services.podhost.loadbalancer.server.port=80'
+    volumes:
+      - type: bind
+        source: {{ service_path }}/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+      {{ volume_nocopy }}
+        source: {{ service }}_podcast
+        target: /usr/share/nginx/html/podcast
+        read_only: true
+    networks:
+      - {{ traefik_network }}
+
+volumes:
+  {{ service }}_content:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/blog'
+  {{ service }}_podcast:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/podcast'
+
+networks:
+  {{ traefik_network }}:
+    external: true

@@ -1,0 +1,82 @@
+---
+metrics: false # Whether to expose metrics at /metrics
+alerting:
+  discord:
+    webhook-url: '{{ discord_webhook_url }}'
+
+services:
+  - name: Narnia
+    url: 'http://na.router.{{ lan }}'
+    group: lan
+    alerts:
+      - type: discord
+        enabled: true
+        description: 'Narnia is unavailable'
+        send-on-resolved: true
+    conditions:
+      - '[STATUS] == 200'
+      - '[RESPONSE_TIME] < 300'
+  - name: DNS
+    group: lan
+    url: 'tcp://192.168.5.91:53'
+    conditions:
+      - "[CONNECTED] == true"
+    {{ discord_alert }}
+  - name: Registry
+    group: lan
+    url: 'https://registry.{{ lan }}'
+    {{ default_check }}
+  - name: Jenkins
+    group: lan
+    url: 'https://ci.{{ lan }}/login'
+    {{ default_check }}
+  - name: Traefik internal
+    group: lan
+    url: 'https://t.{{ lan }}'
+    conditions:
+      - '[STATUS] == 401'
+    {{ discord_alert }}
+  - name: Syncthing EQ
+    group: lan
+    url: 'https://sync.{{ lan }}'
+    {{ default_check }}
+  - name: Paperless
+    group: lan
+    url: 'https://paper.{{ lan }}'
+    {{ default_check }}
+  - name: qBittorrent
+    group: lan
+    url: 'https://p2p.{{ lan }}'
+    {{ default_check }}
+  - name: Jellyfin
+    group: lan
+    url: 'https://theatre.{{ lan }}'
+    {{ default_check }}
+  - name: youtube-dl
+    group: lan
+    url: 'https://ss.{{ lan }}'
+    {{ default_check }}
+  - name: TTRSS
+    group: external
+    url: 'https://rss.{{ domain }}'
+    {{ default_check }}
+  - name: Etherpad
+    group: external
+    url: 'https://pad.{{ domain }}'
+    {{ default_check }}
+  - name: Kanboard
+    group: external
+    url: 'https://kan.{{ domain }}'
+    {{ default_check }}
+  - name: Nextcloud
+    group: external
+    url: 'https://cloud.{{ domain }}'
+    {{ default_check }}
+  - name: RPG Basement
+    group: ttrpg
+    url: 'https://rpgbasement.xyz'
+    {{ default_check }}
+  - name: Podcast
+    group: ttrpg
+    url: 'https://host.rpgbasement.xyz/podcast/'
+    {{ default_check }}

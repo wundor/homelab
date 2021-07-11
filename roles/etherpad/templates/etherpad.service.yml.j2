@@ -1,0 +1,59 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  {{ service }}:
+    image: etherpad/etherpad:{{ version }}
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:{{ exposed_port }}']
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_app
+        target: /opt/etherpad-lite/var
+    environment:
+      - 'TITLE=Test Chamber One Pad'
+      - DB_TYPE=postgres
+      - PORT={{ exposed_port }}
+      - DB_HOST=db
+      - DB_NAME={{ service }}
+      - NODE_ENV=production
+      - DB_USER={{ service }}
+      - DB_PASS={{ db_pass }}
+      - ADMIN_PASSWORD={{ admin_pass }}
+      - PAD_OPTIONS_SHOW_CHAT=false
+      - ETHERPAD_PLUGINS='ep_comments_page ep_cursor_trace'
+    networks:
+      - {{ traefik_network }}
+      - {{ service }}
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+
+  db:
+    image: postgres:9.6-alpine
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'etherpad']
+    environment:
+      - POSTGRES_DB={{ service }}
+      - POSTGRES_USER={{ service }}
+      - POSTGRES_PASSWORD={{ db_pass }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_db
+        target: /var/lib/postgresql/data
+    networks:
+      - {{ service }}
+
+volumes:
+  {{ service }}_app:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/app'
+  {{ service }}_db:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/db'
+
+networks:
+  {{ service }}:
+    internal: true
+  {{ traefik_network }}:
+    external: true

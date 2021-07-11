@@ -1,0 +1,38 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: ghcr.io/linuxserver/qbittorrent:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_config
+        target: /config
+      {{ volume_nocopy }}
+        source: {{ service }}_downloads
+        target: /downloads
+    environment:
+      - WEBUI_PORT=8080
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    ports:
+      - target: 51413
+        published: 51413
+      - target: 51413
+        published: 51413
+        protocol: udp
+    networks:
+      - {{ traefik_network }}
+
+volumes:
+  {{ service }}_config:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}'
+  {{ service }}_downloads:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/seedbox'
+
+networks:
+  {{ traefik_network }}:
+    external: true

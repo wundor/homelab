@@ -1,0 +1,28 @@
+---
+domain: testchamber.one
+lan: 'lan.{{ domain }}'
+
+root_path: '/opt/homelab'
+compose_version: '3.9'
+traefik_network: traefik-public
+nfs_source: "nfsvers=4,addr={{ groups['nas'][0] }},nolock,soft,rw"
+zfs_pool: tank
+
+nfs_volume: |
+  driver: local
+      driver_opts:
+        type: 'nfs'
+        o: '{{ nfs_source }}'
+
+traefik_default_labels: |
+  - 'traefik.enable=true'
+          - 'traefik.docker.network={{ traefik_network }}'
+          - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns }}`)'
+          - 'traefik.http.routers.{{ service }}.tls=true'
+          - 'traefik.http.routers.{{ service }}.entrypoints=https'
+          - 'traefik.http.services.{{ service }}.loadbalancer.server.port={{ exposed_port }}'
+
+volume_nocopy: |
+  - type: volume
+          volume:
+            nocopy: true

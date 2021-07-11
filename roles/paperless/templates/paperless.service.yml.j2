@@ -1,0 +1,89 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  broker:
+    image: redis:6
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    networks:
+      - {{ service }}
+
+  gotenberg:
+    image: thecodingmachine/gotenberg:6
+    environment:
+      DISABLE_GOOGLE_CHROME: 1
+    networks:
+      - {{ service }}
+
+  tika:
+    image: apache/tika
+    networks:
+      - {{ service }}
+
+  db:
+    image: postgres:13
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_db
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: {{ service }}
+      POSTGRES_USER: {{ service }}
+      POSTGRES_PASSWORD: {{ db_pass }}
+    networks:
+      - {{ service }}
+
+  {{ service }}:
+    image: jonaswinkler/paperless-ng:{{ version }}
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000']
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_app
+        target: /usr/src/paperless/data
+      {{ volume_nocopy }}
+        source: {{ service }}_docs
+        target: /usr/src/paperless/media
+      # for exporting all data
+      # - ./export:/usr/src/paperless/export
+    environment:
+      PAPERLESS_TIKA_ENABLED: '1'
+      PAPERLESS_CONSUMER_DELETE_DUPLICATES: 'true'
+      PAPERLESS_SECRET_KEY: '{{ secret_key }}'
+      PAPERLESS_DBHOST: 'db'
+      PAPERLESS_DBNAME: '{{ service }}'
+      PAPERLESS_DBUSER: '{{ service }}'
+      PAPERLESS_DBPASS: '{{ db_pass }}'
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: 'http://gotenberg:3000'
+      PAPERLESS_TIKA_ENDPOINT: 'http://tika:9998'
+      PAPERLESS_REDIS: 'redis://broker:6379'
+      PAPERLESS_OCR_LANGUAGE: 'rus+eng'
+      PAPERLESS_OCR_LANGUAGES: 'rus eng'
+      PAPERLESS_OCR_THREADS: '2'
+      PAPERLESS_TIME_ZONE: 'Europe/Moscow'
+    networks:
+      - {{ traefik_network }}
+      - {{ service }}
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+
+volumes:
+  {{ service }}_db:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/db'
+  {{ service }}_app:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/app'
+  {{ service }}_docs:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/docs'
+
+networks:
+  {{ service }}:
+    internal: true
+  {{ traefik_network }}:
+    external: true

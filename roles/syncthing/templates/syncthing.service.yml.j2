@@ -1,0 +1,32 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: syncthing/syncthing:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_archive
+        target: /mnt/archive
+      {{ volume_nocopy }}
+        source: {{ service }}_config
+        target: /var/syncthing
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+    dns:
+      - 1.1.1.1
+
+volumes:
+  {{ service }}_archive:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/archive'
+  {{ service }}_config:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}'
+
+networks:
+  {{ traefik_network }}:
+    external: true

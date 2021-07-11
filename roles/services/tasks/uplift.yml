@@ -1,0 +1,14 @@
+---
+- name: Generate {{ service }} compose file
+  template:
+    src: '{{ service }}.service.yml.j2'
+    dest: '{{ service_path }}/{{ service }}.service.yml'
+
+- name: Deploy {{ service }} stack
+  docker_stack:
+    state: present
+    name: '{{ service }}'
+    compose:
+      - '{{ service_path }}/{{ service }}.service.yml'
+  register: stack_deployed
+  become: true

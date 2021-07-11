@@ -1,0 +1,15 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: rudloff/alltube:{{ version }}
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+
+networks:
+  {{ traefik_network }}:
+    external: true

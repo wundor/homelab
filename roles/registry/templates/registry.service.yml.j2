@@ -1,0 +1,48 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: registry:{{ version['be'] }}
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}be.rule=Host(`{{ dns['be'] }}`)'
+        - 'traefik.http.routers.{{ service }}be.tls=true'
+        - 'traefik.http.routers.{{ service }}be.entrypoints=https'
+        - 'traefik.http.services.{{ service }}be.loadbalancer.server.port={{ exposed_port['be'] }}'
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}
+        target: /var/lib/registry
+    networks:
+      - {{ traefik_network }}
+      - {{ service }}
+
+  frontend:
+    image: konradkleine/docker-registry-frontend:{{ version['fe'] }}
+    environment:
+      - ENV_DOCKER_REGISTRY_HOST={{ service }}
+      - ENV_DOCKER_REGISTRY_PORT=5000
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}fe.rule=Host(`{{ dns['fe'] }}`)'
+        - 'traefik.http.routers.{{ service }}fe.tls=true'
+        - 'traefik.http.routers.{{ service }}fe.entrypoints=https'
+        - 'traefik.http.services.{{ service }}fe.loadbalancer.server.port={{ exposed_port['fe'] }}'
+    networks:
+      - {{ traefik_network }}
+      - {{ service }}
+
+volumes:
+  {{ service }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}'
+
+networks:
+  {{ traefik_network }}:
+    external: true
+  {{ service }}:

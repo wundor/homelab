@@ -1,0 +1,17 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  {{ service }}:
+    image: twinproduction/gatus:{{ version }}
+    volumes:
+      - {{ service_path }}/config.yml:/config/config.yaml
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+
+networks:
+  {{ traefik_network }}:
+    external: true

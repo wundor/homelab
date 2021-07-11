@@ -1,0 +1,36 @@
+{
+  "url": "http://localhost:{{ exposed_port }}",
+  "server": {
+    "port": {{ exposed_port }},
+    "host": "0.0.0.0"
+  },
+  "mail": {
+    "transport": "SMTP",
+    "options": {
+        "service": "Mailgun",
+        "host": "smtp.mailgun.org",
+        "port": 465,
+        "secureConnection": true,
+        "auth": {
+            "user": "{{ mailgun_user }}",
+            "pass": "{{ mailgun_pass }}"
+        }
+    }
+  },
+  "database": {
+    "client": "sqlite3",
+    "connection": {
+      "filename": "/var/lib/ghost/content/data/ghost.db"
+    }
+  },
+  "logging": {
+    "transports": [
+      "file",
+      "stdout"
+    ]
+  },
+  "process": "systemd",
+  "paths": {
+    "contentPath": "/var/lib/ghost/content"
+  }
+}

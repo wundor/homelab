@@ -1,0 +1,32 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  {{ service }}:
+    image: kanboard/kanboard:{{ version }}
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost']
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_app
+        target: /var/www/app/data
+      {{ volume_nocopy }}
+        source: {{ service }}_plugins
+        target: /var/www/app/plugins
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+
+volumes:
+  {{ service }}_app:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/app'
+  {{ service }}_plugins:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ service }}/plugins'
+
+networks:
+  {{ traefik_network }}:
+    external: true
