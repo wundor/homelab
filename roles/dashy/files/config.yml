@@ -5,7 +5,7 @@ appConfig:
     hideSettings: true
   theme: 'nord'
   fontAwesomeKey: '0821c65656'
-  layout: 'vertical'
+  layout: 'auto'
   iconSize: 'large'
 pageInfo:
   title: 'Testchamber'

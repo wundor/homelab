@@ -16,6 +16,7 @@ discord_alert: |
   alerts:
         - type: discord
           enabled: true
+          send-on-resolved: true
 
 default_check: |
   {{ discord_alert }}
