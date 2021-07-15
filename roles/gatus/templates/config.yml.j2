@@ -22,6 +22,14 @@ services:
     conditions:
       - "[CONNECTED] == true"
     {{ discord_alert }}
+  - name: Dashy
+    group: lan
+    url: 'https://hub.{{ lan }}'
+    {{ default_check }}
+  - name: Portainer
+    group: lan
+    url: 'https://swarm.{{ lan }}'
+    {{ default_check }}
   - name: Registry
     group: lan
     url: 'https://registry.{{ lan }}'

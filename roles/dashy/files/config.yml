@@ -35,6 +35,9 @@ sections:
         url: 'http://na.router.lan.testchamber.one/'
   - name: 'INFRA'
     items:
+      - title: 'Portainer'
+        icon: 'https://avatars.githubusercontent.com/u/22225832?s=200&v=4'
+        url: 'https://swarm.lan.testchamber.one/'
       - title: 'Registry'
         icon: 'https://symbols.getvecta.com/stencil_27/31_container-registry.9b180a2bbf.png'
         url: 'https://registry.lan.testchamber.one/'

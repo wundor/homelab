@@ -12,6 +12,7 @@ services:
         source: {{ service }}_config
         target: /var/syncthing
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     networks:

@@ -1,0 +1,14 @@
+---
+- name: Cleanup service directory
+  file:
+    path: '{{ root_path }}'
+    state: absent
+  become: true
+  tags: [never, wipe, cleanup]
+
+- name: Leave swarm
+  docker_swarm:
+    state: absent
+    force: true
+  become: true
+  tags: [never, wipe, swarm-leave]

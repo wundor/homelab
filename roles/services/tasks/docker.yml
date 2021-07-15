@@ -45,6 +45,15 @@
     - name: Init docker swarm
       docker_swarm:
         state: present
+      register: swarm_info
+      when: "'edge' in group_names"
+
+    - name: Attach workers to swarm
+      docker_swarm:
+        state: join
+        join_token: "{{ hostvars[groups['edge'][0]]['swarm_info']['swarm_facts']['JoinTokens']['Worker'] }}"
+        remote_addrs: [ "{{ groups['edge'][0] }}" ]
+      when: "'worker' in group_names"
 
     - name: Create public network
       docker_network:
@@ -52,4 +61,29 @@
         driver: overlay
         attachable: true
         force: false
+      when: "'edge' in group_names"
+
+    - name: Set edge node label
+      docker_node:
+        hostname: '{{ inventory_hostname }}'
+        labels:
+          scope: edge
+      when: "'edge' in group_names"
+
+    - name: Set lan node label
+      docker_node:
+        hostname: '{{ inventory_hostname }}'
+        labels:
+          scope: lan
+      delegate_to: "{{ groups['edge'][0] }}"
+      when: "'lan' in group_names"
+
+    - name: Set wan node label
+      docker_node:
+        hostname: '{{ inventory_hostname }}'
+        labels:
+          scope: wan
+      delegate_to: "{{ groups['edge'][0] }}"
+      when: "'wan' in group_names"
+
   become: true

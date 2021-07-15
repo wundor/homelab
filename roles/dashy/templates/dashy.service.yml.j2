@@ -10,6 +10,7 @@ services:
       test: ["CMD", "yarn", "health-check"]
       interval: 10s
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     networks:

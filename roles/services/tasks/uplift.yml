@@ -1,14 +1,25 @@
 ---
-- name: Generate {{ service }} compose file
-  template:
-    src: '{{ service }}.service.yml.j2'
-    dest: '{{ service_path }}/{{ service }}.service.yml'
+- block:
+    - name: Create {{ service }} directory on the edge
+      file:
+        path: '{{ service_path }}'
+        state: directory
+        owner: '{{ ansible_env.USER }}'
+        group: '{{ ansible_env.USER }}'
+      become: true
 
-- name: Deploy {{ service }} stack
-  docker_stack:
-    state: present
-    name: '{{ service }}'
-    compose:
-      - '{{ service_path }}/{{ service }}.service.yml'
-  register: stack_deployed
-  become: true
+    - name: Generate {{ service }} compose file
+      template:
+        src: '{{ service }}.service.yml.j2'
+        dest: '{{ service_path }}/{{ service }}.service.yml'
+
+    - name: Deploy {{ service }} stack
+      docker_stack:
+        state: present
+        name: '{{ service }}'
+        compose:
+          - '{{ service_path }}/{{ service }}.service.yml'
+      register: stack_deployed
+      become: true
+
+  delegate_to: "{{ groups['edge'][0] }}"

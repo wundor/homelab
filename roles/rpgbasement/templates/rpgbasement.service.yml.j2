@@ -9,6 +9,7 @@ services:
       GHOST_CONTENT: /var/lib/ghost/content
       NODE_ENV: production
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     volumes:
@@ -27,6 +28,7 @@ services:
     environment:
       - TZ=Europe/Moscow
     deploy:
+      {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'

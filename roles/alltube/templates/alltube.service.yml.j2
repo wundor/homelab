@@ -5,6 +5,7 @@ services:
   {{ service }}:
     image: rudloff/alltube:{{ version }}
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     networks:

@@ -12,17 +12,16 @@ services:
       - feed_icons:/var/www/feed-icons/
     networks:
       - {{ traefik_network }}
-      - service-only
-      - database-only
+      - default
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
   mercury: # set Mercury Parser API endpoint to `service.mercury:3000` on TTRSS plugin setting page
     image: wangqiru/mercury-parser-api:latest
-    networks:
-      - {{ traefik_network }}
-      - service-only
+    deploy:
+      {{ placement }}
 
   postgres:
     image: postgres:13-alpine
@@ -32,8 +31,8 @@ services:
       {{ volume_nocopy }}
         source: {{ service }}_db
         target: /var/lib/postgresql/data
-    networks:
-      - database-only
+    deploy:
+      {{ placement }}
 
 volumes:
   feed_icons:
@@ -44,7 +43,3 @@ volumes:
 networks:
   {{ traefik_network }}:
     external: true
-  service-only:
-    internal: true
-  database-only:
-    internal: true

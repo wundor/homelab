@@ -6,11 +6,11 @@ services:
     image: redis:6
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
-    networks:
-      - {{ service }}
+    deploy:
+      {{ placement }}
 
   db:
-    image: mariadb:10
+    image: reg.lan.testchamber.one/mariadb:10.5
     healthcheck:
       test: ['CMD', 'mysqladmin', '-p$$MYSQL_ROOT_PASSWORD', 'ping']
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
@@ -23,9 +23,8 @@ services:
       {{ volume_nocopy }}
         source: {{ service }}_db
         target: /var/lib/mysql
-    networks:
-      - {{ service }}
     deploy:
+      {{ placement }}
       rollback_config:
         order: stop-first
 
@@ -39,11 +38,13 @@ services:
         source: {{ service}}_data
         target: /mnt/nextcloud
     entrypoint: /cron.sh
-    networks:
-      - {{ service }}
+    deploy:
+      {{ placement }}
 
   {{ service }}:
     image: nextcloud:{{ version }}
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/cron.php']
     volumes:
       {{ volume_nocopy }}
         source: my_data
@@ -62,7 +63,7 @@ services:
         target: /mnt/nextcloud
     networks:
       - {{ traefik_network }}
-      - {{ service }}
+      - default
     environment:
             # - APACHE_DISABLE_REWRITE_IP=1
             # - TRUSTED_PROXIES=172.30.0.0/16
@@ -75,13 +76,13 @@ services:
       - OVERWRITEPROTOCOL=https
       - NEXTCLOUD_DATA_DIR=/mnt/nextcloud
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
 networks:
   {{ traefik_network }}:
     external: true
-  {{ service }}:
 
 volumes:
   my_data:

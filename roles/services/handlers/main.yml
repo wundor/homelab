@@ -1,4 +1,5 @@
 ---
 - name: restart_main_service
   shell: 'docker service update --force {{ service }}_{{ service }}'
+  delegate_to: "{{ groups['edge'][0] }}"
   when: 'not stack_deployed.changed'

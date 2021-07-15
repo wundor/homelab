@@ -6,13 +6,22 @@
         tasks_from: docker
   tags: docker
 
-- hosts: docker
+- hosts: edge
   roles:
     - traefik
   vars:
     version: v2.4
     dns: t.{{ lan }}
   tags: traefik
+
+- hosts: edge
+  roles:
+    - portainer
+  vars:
+    version: '2.6.1'
+    dns: swarm.{{ lan }}
+    exposed_port: 9000
+  tags: portainer
 
 - hosts: lan
   roles:
@@ -45,7 +54,7 @@
   roles:
     - syncthing
   vars:
-    version: latest
+    version: '1.18'
     dns: sync.{{ lan }}
     exposed_port: 8384
   tags: syncthing
@@ -114,7 +123,7 @@
   roles:
     - etherpad
   vars:
-    version: '1.8.0'
+    version: '1.8.0' # fixed for now
     dns: pad.{{ domain }}
     exposed_port: 8080
   tags: etherpad
@@ -144,3 +153,9 @@
     dns: rpgbasement.xyz
     exposed_port: 2368
   tags: rpgbasement
+
+- hosts: docker
+  tasks:
+    - import_role:
+        name: services
+        tasks_from: cleanup

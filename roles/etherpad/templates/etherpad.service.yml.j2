@@ -24,8 +24,8 @@ services:
       - ETHERPAD_PLUGINS='ep_comments_page ep_cursor_trace'
     networks:
       - {{ traefik_network }}
-      - {{ service }}
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
@@ -42,7 +42,9 @@ services:
         source: {{ service }}_db
         target: /var/lib/postgresql/data
     networks:
-      - {{ service }}
+      - {{ traefik_network }}
+    deploy:
+      {{ placement }}
 
 volumes:
   {{ service }}_app:
@@ -53,7 +55,5 @@ volumes:
       device: ':/{{ zfs_pool }}/{{ service }}/db'
 
 networks:
-  {{ service }}:
-    internal: true
   {{ traefik_network }}:
     external: true

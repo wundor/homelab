@@ -14,6 +14,7 @@ services:
         source: {{ service }}_plugins
         target: /var/www/app/plugins
     deploy:
+      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     networks:

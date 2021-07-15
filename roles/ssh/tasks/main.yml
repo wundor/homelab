@@ -15,16 +15,28 @@
       when: item not in ignored_users
 
     - name: Disable password ssh login
-      shell: '{{ item }}'
-      loop:
-        - "sed -i '/PasswordAuthentication /d' /etc/ssh/sshd_config"
-        - "echo 'PasswordAuthentication no' | tee -a /etc/ssh/sshd_config"
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: 'PasswordAuthentication'
+        line: 'PasswordAuthentication no # managed by ssh_keys'
 
     - name: Disable interactive root login
-      shell: '{{ item }}'
-      loop:
-        - "sed -i '/PermitRootLogin /d' /etc/ssh/sshd_config"
-        - "echo 'PermitRootLogin prohibit-password' | tee -a /etc/ssh/sshd_config"
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: 'PermitRootLogin'
+        line: 'PermitRootLogin without-password # managed by ssh_keys'
+
+    - name: Disable X forwarding
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: 'X11Forwarding'
+        line: 'X11Forwarding no # managed by ssh_keys'
+
+    - name: Disable reverse tunneling
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: 'GatewayPorts'
+        line: 'GatewayPorts no # managed by ssh_keys'
 
     - name: Reload sshd config
       service:
