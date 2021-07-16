@@ -1,0 +1,10 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: wunderwaffla/rss-my-ass:latest
+    environment:
+      - TOKEN={{ telegram_bot_token }}
+    deploy:
+      {{ placement }}

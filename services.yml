@@ -154,6 +154,11 @@
     exposed_port: 2368
   tags: rpgbasement
 
+- hosts: wan
+  roles:
+    - rss_my_ass
+  tags: rss_my_ass
+
 - hosts: docker
   tasks:
     - import_role:
