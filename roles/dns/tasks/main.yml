@@ -1,0 +1,92 @@
+---
+- block:
+    - name: Create a domain
+      digital_ocean_domain:
+        name: '{{ domain }}'
+        oauth_token: '{{ do_auth_token }}'
+        state: present
+      run_once: true
+
+    - name: Create A record for domain
+      community.digitalocean.digital_ocean_domain_record:
+        oauth_token: '{{ do_auth_token }}'
+        state: present
+        domain: '{{ domain }}'
+        type: A
+        name: '@'
+        data: '{{ public_ip }}'
+      run_once: true
+
+    - name: Create A records for internal hosts
+      community.digitalocean.digital_ocean_domain_record:
+        oauth_token: '{{ do_auth_token }}'
+        state: present
+        domain: '{{ domain }}'
+        type: A
+        name: '{{  inventory_hostname.split(".")[0] | lower }}.lan'
+        data: '{{ ansible_host }}'
+
+    - name: Create A record for ingress host
+      community.digitalocean.digital_ocean_domain_record:
+        oauth_token: '{{ do_auth_token }}'
+        state: present
+        domain: '{{ domain }}'
+        type: A
+        name: 'lan'
+        data: "{{ hostvars[groups['edge'][0]]['ansible_host'] }}"
+      run_once: true
+
+    - name: Create CNAME record for public services
+      community.digitalocean.digital_ocean_domain_record:
+        oauth_token: '{{ do_auth_token }}'
+        state: present
+        domain: '{{ domain }}'
+        type: CNAME
+        name: '*'
+        data: '{{ domain }}'
+      run_once: true
+
+    - name: Create CNAME record for lan services
+      community.digitalocean.digital_ocean_domain_record:
+        oauth_token: '{{ do_auth_token }}'
+        state: present
+        domain: '{{ domain }}'
+        type: CNAME
+        name: '*.lan'
+        data: '{{ lan }}'
+      run_once: true
+
+  delegate_to: localhost
+
+- name: Set static DHCP leases for equestria
+  raw: 'ip dhcp host {{ inventory_hostname }} {{ mac }} {{ ansible_host }}'
+  when: "'eq' in group_names and 'router' not in inventory_hostname and mac is defined"
+  delegate_to: eq-router.lan.testchamber.one
+
+- name: Get static DHCP leases for narnia
+  raw: |
+    uci show dhcp|grep 'dhcp.@host\['| sed 's/.*\[\(.*\)\].*/\1/'|sort -u
+  register: lease_numbers
+  when: groups['na'] is defined
+  run_once: true
+  delegate_to: na-router.lan.testchamber.one
+
+- name: Remove static DHCP leases for narnia
+  raw: 'uci del dhcp.@host[{{ item }}]'
+  loop: '{{ lease_numbers.stdout_lines }}'
+  when: groups['na'] is defined
+  run_once: true
+  delegate_to: na-router.lan.testchamber.one
+
+- name: Set static DHCP leases for narnia
+  raw: '{{ item }}'
+  loop:
+    - 'uci add dhcp host'
+    - 'uci set dhcp.@host[-1].name="{{ inventory_hostname }}"'
+    - 'uci set dhcp.@host[-1].mac="{{ mac }}"'
+    - 'uci set dhcp.@host[-1].ip="{{ ansible_host }}"'
+    - 'uci set dhcp.@host[-1].dns="1"'
+    - 'uci commit dhcp'
+    - '/etc/init.d/dnsmasq restart'
+  when: "'na' in group_names and 'router' not in inventory_hostname and mac is defined"
+  delegate_to: na-router.lan.testchamber.one

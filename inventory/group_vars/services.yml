@@ -1,7 +1,4 @@
 ---
-domain: testchamber.one
-lan: 'lan.{{ domain }}'
-
 root_path: '/opt/homelab'
 compose_version: '3.8'
 traefik_network: traefik-public

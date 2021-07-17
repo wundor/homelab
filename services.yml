@@ -159,6 +159,26 @@
     - rss_my_ass
   tags: rss_my_ass
 
+- hosts: wan
+  roles:
+    - rss_bridge
+  vars:
+    version: '2021-04-25'
+    dns:
+      public: rss-my-ass.{{ domain }}
+      lan: rss-my-ass.{{ lan }}
+    exposed_port: 80
+  tags: rss_bridge
+
+# - hosts: wan
+#   roles:
+#     - kutt
+#   vars:
+#     version: '2.7.2'
+#     dns: q.{{ domain }}
+#     exposed_port: 3000
+#   tags: kutt
+
 - hosts: docker
   tasks:
     - import_role:

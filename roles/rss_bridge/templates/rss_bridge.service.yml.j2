@@ -1,0 +1,33 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: rssbridge/rss-bridge:{{ version }}
+    volumes:
+      - type: bind
+        source: {{ service_path }}/whitelist.txt
+        target: /app/whitelist.txt
+        read_only: true
+    networks:
+      - {{ traefik_network }}
+    deploy:
+      {{ placement }}
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-main.rule=Host(`{{ dns.lan }}`)'
+        - 'traefik.http.routers.{{ service }}-main.service={{ service }}'
+        - 'traefik.http.routers.{{ service }}-main.tls=true'
+        - 'traefik.http.routers.{{ service }}-main.entrypoints=https'
+        - 'traefik.http.routers.{{ service }}-main.middlewares=auth-traefik'
+        - 'traefik.http.services.{{ service }}-main.loadbalancer.server.port={{ exposed_port }}'
+        - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns.public }}`) && Query(`action=display`)'
+        - 'traefik.http.routers.{{ service }}.service={{ service }}'
+        - 'traefik.http.routers.{{ service }}.tls=true'
+        - 'traefik.http.routers.{{ service }}.entrypoints=https'
+        - 'traefik.http.services.{{ service }}.loadbalancer.server.port={{ exposed_port }}'
+
+networks:
+  {{ traefik_network }}:
+    external: true

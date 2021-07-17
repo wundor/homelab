@@ -6,5 +6,6 @@ services:
     image: wunderwaffla/rss-my-ass:latest
     environment:
       - TOKEN={{ telegram_bot_token }}
+      - RSS_BRIDGE=rss-my-ass.{{ domain }}
     deploy:
       {{ placement }}
