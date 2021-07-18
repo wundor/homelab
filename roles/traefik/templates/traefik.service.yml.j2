@@ -26,9 +26,11 @@ services:
       - --log.level=INFO
       - --api
       - --ping=true
-      # - --accesslog
+      - --accesslog
       - --providers.docker
+      - --serversTransport.insecureSkipVerify=true
       - --providers.docker.exposedbydefault=false
+      - --providers.file.filename=/config.yml
       - --providers.docker.swarmmode
       - --entrypoints.http.address=:80
       - --entrypoints.https.address=:443
@@ -39,8 +41,6 @@ services:
       - --certificatesresolvers.wild.acme.dnschallenge.provider=digitalocean
       - --certificatesresolvers.wild.acme.dnschallenge.delaybeforecheck=0
       - --certificatesresolvers.wild.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
-        # - --certificatesresolvers.wild.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-        # - --certificatesresolvers.le.acme.tlschallenge=true
     deploy:
       {{ placement }}
       labels:
@@ -62,9 +62,8 @@ services:
         - 'traefik.http.routers.{{ service }}.tls=true'
         - 'traefik.http.routers.{{ service }}.entrypoints=https'
         - 'traefik.http.routers.{{ service }}.service=api@internal'
-        - 'traefik.http.routers.{{ service }}.middlewares=auth-traefik'
+        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
         - 'traefik.http.services.{{ service }}.loadbalancer.server.port=8080'
-        - 'traefik.http.middlewares.auth-traefik.basicauth.users=admin:$$apr1$$lGDvm4.z$$5WuadPBrGq4kRJalnPfl5.'
     networks:
       - {{ traefik_network }}
 

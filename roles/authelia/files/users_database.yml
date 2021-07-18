@@ -1,0 +1,8 @@
+---
+users:
+  wunder:
+    displayname: "WundeR"
+    password: "$argon2id$v=19$m=65536,t=1,p=8$SGYrcVIyNVplejNzaXI4Zw$qyhAx27Zk4HPmD1l6crvy1QiyW31MUyU5U9rLDwYYrc"
+    email: authelia@testchamber.one
+    groups:
+      - admins

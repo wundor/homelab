@@ -12,7 +12,7 @@ services:
         - 'traefik.http.routers.{{ service }}-be.rule=Host(`{{ dns['be'] }}`)'
         - 'traefik.http.routers.{{ service }}-be.tls=true'
         - 'traefik.http.routers.{{ service }}-be.entrypoints=https'
-        - 'traefik.http.routers.{{ service }}-be.middlewares=auth-traefik'
+        - 'traefik.http.routers.{{ service }}-be.middlewares=authelia@docker'
         - 'traefik.http.services.{{ service }}-be.loadbalancer.server.port={{ exposed_port['be'] }}'
     volumes:
       {{ volume_nocopy }}
@@ -35,7 +35,7 @@ services:
         - 'traefik.http.routers.{{ service }}-fe.rule=Host(`{{ dns['fe'] }}`)'
         - 'traefik.http.routers.{{ service }}-fe.tls=true'
         - 'traefik.http.routers.{{ service }}-fe.entrypoints=https'
-        - 'traefik.http.routers.{{ service }}-fe.middlewares=auth-traefik'
+        - 'traefik.http.routers.{{ service }}-fe.middlewares=authelia@docker'
         - 'traefik.http.services.{{ service }}-fe.loadbalancer.server.port={{ exposed_port['fe'] }}'
     networks:
       - {{ traefik_network }}

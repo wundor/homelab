@@ -57,6 +57,9 @@ sections:
       - title: 'Traefik'
         icon: 'https://traefik.io/static/traefik-proxy-logo--white-82153be41e0ce620a921b4bce974f6d8.svg'
         url: 'https://t.lan.testchamber.one/'
+      - title: 'Authelia'
+        icon: 'https://opencollective-production.s3.us-west-1.amazonaws.com/bf936590-3aae-11ea-a944-d5e45fdc60ab.png'
+        url: 'https://auth.testchamber.one/'
         statusCheck: false
   - name: 'SYNC'
     items:

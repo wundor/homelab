@@ -1,7 +1,7 @@
 ---
 - block:
-  - set_fact:
-      service: '{{ role_name }}'
+    - set_fact:
+        service: '{{ role_name }}'
 
     - import_role:
         name: services

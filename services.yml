@@ -32,6 +32,7 @@
     - rpgbasement
     - rss_my_ass
     - rss_bridge
+    - authelia
 
 - hosts: docker
   tasks:

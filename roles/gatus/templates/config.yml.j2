@@ -32,6 +32,10 @@ services:
     {{ default_check }}
   - name: Registry
     group: lan
+    url: 'https://reg.{{ lan }}'
+    {{ default_check }}
+  - name: Registry FE
+    group: lan
     url: 'https://registry.{{ lan }}'
     {{ default_check }}
   - name: Jenkins
@@ -41,9 +45,7 @@ services:
   - name: Traefik internal
     group: lan
     url: 'https://t.{{ lan }}'
-    conditions:
-      - '[STATUS] == 401'
-    {{ discord_alert }}
+    {{ default_check }}
   - name: Syncthing EQ
     group: lan
     url: 'https://sync.{{ lan }}'

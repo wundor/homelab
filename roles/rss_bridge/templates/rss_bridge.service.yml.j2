@@ -20,7 +20,7 @@ services:
         - 'traefik.http.routers.{{ service }}-main.service={{ service }}'
         - 'traefik.http.routers.{{ service }}-main.tls=true'
         - 'traefik.http.routers.{{ service }}-main.entrypoints=https'
-        - 'traefik.http.routers.{{ service }}-main.middlewares=auth-traefik'
+        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
         - 'traefik.http.services.{{ service }}-main.loadbalancer.server.port={{ exposed_port }}'
         - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns.public }}`) && Query(`action=display`)'
         - 'traefik.http.routers.{{ service }}.service={{ service }}'

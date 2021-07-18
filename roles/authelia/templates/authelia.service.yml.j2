@@ -1,0 +1,40 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: authelia/authelia:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_app
+        target: /config
+    networks:
+      - {{ traefik_network }}
+    environment:
+      - TZ=Europe/Moscow
+    deploy:
+      {{ placement }}
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns }}`)'
+        - 'traefik.http.routers.{{ service }}.entrypoints=https'
+        - 'traefik.http.routers.{{ service }}.tls=true'
+        - 'traefik.http.services.{{ service }}.loadbalancer.server.port={{ exposed_port }}'
+        - 'traefik.http.middlewares.{{ service }}.forwardauth.address=http://{{ service }}:{{ exposed_port }}/api/verify?rd=https://{{ dns }}/'
+        - 'traefik.http.middlewares.{{ service }}.forwardauth.trustForwardHeader=true'
+        - 'traefik.http.middlewares.{{ service }}.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email'
+        - 'traefik.http.middlewares.{{ service }}-basic.forwardauth.address=http://{{ service }}:{{ exposed_port }}/api/verify?auth=basic'
+        - 'traefik.http.middlewares.{{ service }}-basic.forwardauth.trustForwardHeader=true'
+        - 'traefik.http.middlewares.{{ service }}-basic.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email'
+
+networks:
+  {{ traefik_network }}:
+    external: true
+
+volumes:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

@@ -12,7 +12,7 @@
 
 - name: Pause for stack removal
   pause:
-    minutes: 1
+    seconds: 30
   when: "'jenkins' is not in service"
 
 - name: Create ZFS snapshots

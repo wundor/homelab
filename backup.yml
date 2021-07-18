@@ -48,6 +48,13 @@
         tasks_from: backup
   tags: ttrss
 
+- hosts: edge
+  tasks:
+    - import_role:
+        name: authelia
+        tasks_from: backup
+  tags: authelia
+
 - hosts: nas
   roles:
     - backup
