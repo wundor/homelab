@@ -1,0 +1,6 @@
+---
+version: version-10.7.6-1
+dns: theatre.{{ lan }}
+exposed_port: 8096
+zfs:
+  app: configs/jellyfin

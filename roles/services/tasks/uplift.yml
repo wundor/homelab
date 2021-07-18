@@ -11,11 +11,13 @@
         owner: '{{ ansible_env.USER }}'
         group: '{{ ansible_env.USER }}'
       become: true
+      when: service_backup is not defined
 
     - name: Generate {{ service }} compose file
       template:
         src: '{{ service }}.service.yml.j2'
         dest: '{{ service_path }}/{{ service }}.service.yml'
+      when: service_backup is not defined
 
     - name: Deploy {{ service }} stack
       docker_stack:

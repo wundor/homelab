@@ -11,5 +11,13 @@
     group: '{{ ansible_env.USER }}'
   become: true
 
-# create zfs datasets
-# zfs create -o sharenfs="rw=@192.168.0.0/16,no_root_squash" tank/SERVICE
+- name: Create ZFS datasets for {{ service }}
+  zfs:
+    name: '{{ zfs_pool }}/{{ item.value }}'
+    state: present
+    extra_zfs_properties:
+      sharenfs: 'rw=@192.168.0.0/16,no_root_squash'
+  loop: '{{ zfs | dict2items }}'
+  when: zfs is defined
+  become: true
+  delegate_to: "{{ groups['nas'][0] }}"

@@ -22,7 +22,7 @@ services:
 volumes:
   {{ service }}_config:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/configs/{{ service }}'
+      device: ':/{{ zfs_pool }}/{{ zfs.app }}'
 
 networks:
   {{ traefik_network }}:

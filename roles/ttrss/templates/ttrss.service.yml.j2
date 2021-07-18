@@ -36,9 +36,11 @@ services:
 
 volumes:
   feed_icons:
-  {{ service }}_db:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/db'
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}
 
 networks:
   {{ traefik_network }}:

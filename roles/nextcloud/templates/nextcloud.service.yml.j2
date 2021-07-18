@@ -10,7 +10,7 @@ services:
       {{ placement }}
 
   db:
-    image: reg.lan.testchamber.one/mariadb:10.5
+    image: mariadb:10.5
     healthcheck:
       test: ['CMD', 'mysqladmin', '-p$$MYSQL_ROOT_PASSWORD', 'ping']
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
@@ -27,7 +27,7 @@ services:
       {{ placement }}
       rollback_config:
         order: stop-first
-
+{#
   cron:
     image: nextcloud:{{ version }}
     volumes:
@@ -40,6 +40,7 @@ services:
     entrypoint: /cron.sh
     deploy:
       {{ placement }}
+#}
 
   {{ service }}:
     image: nextcloud:{{ version }}
@@ -94,12 +95,8 @@ volumes:
   my_archive:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/archive'
-  {{ service }}_app:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/app'
-  {{ service }}_data:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/data'
-  {{ service }}_db:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/db'
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

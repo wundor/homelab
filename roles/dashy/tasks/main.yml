@@ -1,18 +1,20 @@
 ---
-- set_fact:
-    service: '{{ role_name }}'
+- block:
+    - set_fact:
+        service: '{{ role_name }}'
 
-- import_role:
-    name: services
-    tasks_from: prepare
+    - import_role:
+        name: services
+        tasks_from: prepare
 
-- name: Copy config
-  copy:
-    src: 'config.yml'
-    dest: '{{ service_path }}/config.yml'
-  notify:
-    - restart_main_service
+    - name: Copy config
+      copy:
+        src: 'config.yml'
+        dest: '{{ service_path }}/config.yml'
+      notify:
+        - restart_main_service
 
-- import_role:
-    name: services
-    tasks_from: uplift
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: dashy

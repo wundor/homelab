@@ -1,4 +1,12 @@
 ---
+version: '1.4.5'
+dns: paper.{{ lan }}
+exposed_port: 8000
+zfs:
+  app: paperless/app
+  db: paperless/db
+  docs: paperless/docs
+
 db_pass: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   37376638663230396630356366336535306166333333623532376234656437343364356664316430

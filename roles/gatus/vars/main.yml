@@ -1,4 +1,8 @@
 ---
+version: v2.7.0
+dns: ping.{{ lan }}
+exposed_port: 8080
+
 discord_webhook_url: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   31373030303239626334663932333163353761366435636332653733346534396561333561343837

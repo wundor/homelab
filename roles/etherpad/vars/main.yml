@@ -1,4 +1,11 @@
 ---
+version: '1.8.0' # pinned
+dns: pad.{{ domain }}
+exposed_port: 8080
+zfs:
+  app: etherpad/app
+  db: etherpad/db
+
 admin_pass: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   39303633333065653039316562333235646638633731646263386262303163623635633362646565

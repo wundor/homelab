@@ -1,25 +1,33 @@
 ---
 - set_fact:
     service: '{{ role_name }}'
+  tags: ['rpgbasement', 'rpgbasement-backup']
+
+- block:
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - name: Generate ghost config
+      template:
+        src: 'ghost-config.json.j2'
+        dest: '{{ service_path }}/ghost-config.json'
+      notify:
+        - restart_main_service
+
+    - name: Generate nginx config
+      template:
+        src: 'nginx.conf.j2'
+        dest: '{{ service_path }}/nginx.conf'
+      notify:
+        - restart_main_service
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: rpgbasement
 
 - import_role:
     name: services
-    tasks_from: prepare
-
-- name: Generate ghost config
-  template:
-    src: 'ghost-config.json.j2'
-    dest: '{{ service_path }}/ghost-config.json'
-  notify:
-    - restart_main_service
-
-- name: Generate nginx config
-  template:
-    src: 'nginx.conf.j2'
-    dest: '{{ service_path }}/nginx.conf'
-  notify:
-    - restart_main_service
-
-- import_role:
-    name: services
-    tasks_from: uplift
+    tasks_from: backup
+  tags: ['never', 'rpgbasement-backup']

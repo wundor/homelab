@@ -1,0 +1,6 @@
+---
+version: latest
+dns: p2p.{{ lan }}
+exposed_port: 8080
+zfs:
+  app: qbittorrent

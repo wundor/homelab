@@ -1,4 +1,12 @@
 ---
+version: '21'
+dns: cloud.{{ domain }}
+exposed_port: 80
+zfs:
+  app: nextcloud/app
+  data: nextcloud/data
+  db: nextcloud/db
+
 db_root_pass: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   30303030323531623730353238636561303763336239323762376364303232373238663336623065

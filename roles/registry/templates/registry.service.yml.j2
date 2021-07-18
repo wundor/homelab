@@ -16,7 +16,7 @@ services:
         - 'traefik.http.services.{{ service }}-be.loadbalancer.server.port={{ exposed_port['be'] }}'
     volumes:
       {{ volume_nocopy }}
-        source: {{ service }}
+        source: {{ service }}_app
         target: /var/lib/registry
     networks:
       - {{ traefik_network }}
@@ -42,9 +42,11 @@ services:
       - {{ service }}
 
 volumes:
-  {{ service }}:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}'
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}
 
 networks:
   {{ traefik_network }}:

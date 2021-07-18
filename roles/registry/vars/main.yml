@@ -1,0 +1,12 @@
+---
+version:
+  fe: v2
+  be: '2'
+dns:
+  fe: registry.{{ lan }}
+  be: '{{ registry.url }}'
+exposed_port:
+  fe: 80
+  be: 5000
+zfs:
+  app: registry

@@ -1,4 +1,10 @@
 ---
+version: 'latest-2021-06-22'
+dns: rss.{{ domain }}
+exposed_port: 80
+zfs:
+  db: ttrss/db
+
 db_pass: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   31633962336165366233383466326466626664363563343930613433336238333062376263396631

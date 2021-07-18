@@ -1,0 +1,4 @@
+---
+version: latest
+dns: hub.{{ lan }}
+exposed_port: 80

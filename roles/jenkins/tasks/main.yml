@@ -1,7 +1,7 @@
 ---
 - set_fact:
     service: '{{ role_name }}'
-  tags: always
+  tags: ['jenkins', 'jenkins-backup', 'jenkins-build']
 
 - import_role:
     name: services
@@ -24,7 +24,7 @@
     - name: Build an image and push it to a private repo
       docker_image:
         build:
-          path: '.' 
+          path: '.'
         name: '{{ registry.url }}/jenkins'
         force_source: true
         force_tag: true
@@ -33,7 +33,7 @@
         source: build
 
   delegate_to: localhost
-  tags: [never, jenkins-build]
+  tags: ['never', 'jenkins-build']
 
 - block:
     - name: Log into my registry

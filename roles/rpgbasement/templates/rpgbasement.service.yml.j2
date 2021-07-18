@@ -14,7 +14,7 @@ services:
         {{ traefik_default_labels }}
     volumes:
       {{ volume_nocopy }}
-        source: {{ service }}_content
+        source: {{ service }}_blog
         target: /var/lib/ghost/content
       - type: bind
         source: {{ service_path }}/ghost-config.json
@@ -49,12 +49,11 @@ services:
       - {{ traefik_network }}
 
 volumes:
-  {{ service }}_content:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/blog'
-  {{ service }}_podcast:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/podcast'
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}
 
 networks:
   {{ traefik_network }}:

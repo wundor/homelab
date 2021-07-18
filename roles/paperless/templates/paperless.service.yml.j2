@@ -47,8 +47,6 @@ services:
       {{ volume_nocopy }}
         source: {{ service }}_docs
         target: /usr/src/paperless/media
-      # for exporting all data
-      # - ./export:/usr/src/paperless/export
     environment:
       PAPERLESS_TIKA_ENABLED: '1'
       PAPERLESS_CONSUMER_DELETE_DUPLICATES: 'true'
@@ -73,15 +71,11 @@ services:
         {{ traefik_default_labels }}
 
 volumes:
-  {{ service }}_db:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/db'
-  {{ service }}_app:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/app'
-  {{ service }}_docs:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/docs'
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}
 
 networks:
   {{ traefik_network }}:

@@ -1,4 +1,10 @@
 ---
+dns: rpgbasement.xyz
+exposed_port: 2368
+zfs:
+  blog: rpgbasement/blog
+  podcast: rpgbasement/podcast
+
 mailgun_user: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   37643133363339356632356332666631646362333037303865346662653336336136626630336138
