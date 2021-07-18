@@ -1,0 +1,18 @@
+---
+- name: Generate previews
+  shell: |
+    {% raw %}docker exec -u 33 $(docker ps --filter="name=nextcloud_nextcloud" --format='{{.Names}}') sh -c "./occ preview:pre-generate"{% endraw %}
+  register: output
+
+- debug: var=output.stdout_lines
+
+- name: Rescan storage
+  shell: |
+    {% raw %}docker exec -u 33 $(docker ps --filter='name=nextcloud_nextcloud' --format='{{.Names}}') sh -c "./occ files:scan --all"{% endraw %}
+  register: output
+
+- debug: var=output.stdout_lines
+
+- name: Healthcheck
+  uri:
+    url: '{{ healthcheck_url }}'
