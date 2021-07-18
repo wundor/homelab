@@ -1,6 +1,7 @@
 ---
 domain: testchamber.one
 lan: 'lan.{{ domain }}'
+zfs_pool: tank
 
 public_ip: !vault |
   $ANSIBLE_VAULT;1.1;AES256

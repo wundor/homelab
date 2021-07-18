@@ -1,9 +1,8 @@
 ---
-- set_fact:
-    service: '{{ role_name }}'
-  tags: ['rpgbasement', 'rpgbasement-backup']
-
 - block:
+  - set_fact:
+      service: '{{ role_name }}'
+
     - import_role:
         name: services
         tasks_from: prepare
@@ -26,8 +25,3 @@
         name: services
         tasks_from: uplift
   tags: rpgbasement
-
-- import_role:
-    name: services
-    tasks_from: backup
-  tags: ['never', 'rpgbasement-backup']

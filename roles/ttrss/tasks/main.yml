@@ -1,9 +1,8 @@
 ---
-- set_fact:
-    service: '{{ role_name }}'
-  tags: ['ttrss', 'ttrss-backup']
-
 - block:
+    - set_fact:
+        service: '{{ role_name }}'
+
     - import_role:
         name: services
         tasks_from: prepare
@@ -12,8 +11,3 @@
         name: services
         tasks_from: uplift
   tags: ttrss
-
-- import_role:
-    name: services
-    tasks_from: backup
-  tags: ['never', 'ttrss-backup']

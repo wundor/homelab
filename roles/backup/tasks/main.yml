@@ -76,6 +76,11 @@
 
     - debug: var=output.stdout_lines
 
+    - name: Healthcheck
+      uri:
+        url: '{{ healthcheck_url }}'
+
+  always:
     - name: Unmount ZFS datasets
       mount:
         path: '/mnt/{{ bucket }}/{{ item.key }}'

@@ -1,12 +1,7 @@
 ---
 - set_fact:
     service: '{{ role_name }}'
-  tags: ['jenkins', 'jenkins-backup', 'jenkins-build']
-
-- import_role:
-    name: services
-    tasks_from: backup
-  tags: ['never', 'jenkins-backup']
+  tags: ['jenkins', 'jenkins-build']
 
 - block:
     - name: Generate Dockerfile

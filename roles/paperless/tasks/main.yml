@@ -1,9 +1,8 @@
 ---
-- set_fact:
-    service: '{{ role_name }}'
-  tags: ['paperless', 'paperless-backup']
-
 - block:
+    - set_fact:
+        service: '{{ role_name }}'
+
     - import_role:
         name: services
         tasks_from: prepare
@@ -11,9 +10,5 @@
     - import_role:
         name: services
         tasks_from: uplift
-  tags: paperless
 
-- import_role:
-    name: services
-    tasks_from: backup
-  tags: ['never', 'paperless-backup']
+  tags: paperless

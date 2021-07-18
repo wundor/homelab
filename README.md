@@ -18,10 +18,10 @@ passwd # if needed
 Encryption
 
 ```
-ansible-vault encrypt_string --vault-password-file .vault_pass 'secret' --name 'var_name'
+ ansible-vault encrypt_string --vault-password-file .vault_pass 'secret' --name 'var_name'
 ```
 
 ```
-ansible/ansible-runner
-mkdir -p $HOME/.ssh && ansible-vault view --vault-password-file .vault_pass roles/host_setup/files/ci > $HOME/.ssh/id_ecdsa && chmod 0400 $HOME/.ssh/id_ecdsa
+/opt/restic/restic -p ./.restic -r b2:BUCKET:/ restore latest  --target TARGET
+cp -a TARGET/. NEEDED/PATH/.
 ```
