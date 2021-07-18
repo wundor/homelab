@@ -45,10 +45,11 @@
   roles:
     - jenkins
   vars:
-    version: 2.289.2-lts
+    version: '1' # I'm using my custom dockerfile
     dns: ci.{{ lan }}
     exposed_port: 8080
-  tags: jenkins
+    zfs:
+      app: configs/jenkins
 
 - hosts: lan
   roles:
@@ -86,7 +87,7 @@
       be: '2'
     dns:
       fe: registry.{{ lan }}
-      be: reg.{{ lan }}
+      be: '{{ registry.url }}'
     exposed_port:
       fe: 80
       be: 5000
@@ -123,10 +124,12 @@
   roles:
     - etherpad
   vars:
-    version: '1.8.0' # fixed for now
+    version: '1.8.0' # pinned
     dns: pad.{{ domain }}
     exposed_port: 8080
-  tags: etherpad
+    zfs:
+      app: etherpad/app
+      db: etherpad/db
 
 - hosts: wan
   roles:
@@ -169,15 +172,6 @@
       lan: rss-my-ass.{{ lan }}
     exposed_port: 80
   tags: rss_bridge
-
-# - hosts: wan
-#   roles:
-#     - kutt
-#   vars:
-#     version: '2.7.2'
-#     dns: q.{{ domain }}
-#     exposed_port: 3000
-#   tags: kutt
 
 - hosts: docker
   tasks:

@@ -1,11 +1,61 @@
 ---
 - set_fact:
     service: '{{ role_name }}'
+  tags: always
 
 - import_role:
     name: services
-    tasks_from: prepare
+    tasks_from: backup
+  tags: ['never', 'jenkins-backup']
 
-- import_role:
-    name: services
-    tasks_from: uplift
+- block:
+    - name: Generate Dockerfile
+      copy:
+        src: 'Dockerfile'
+        dest: 'Dockerfile'
+
+    - name: Log into my registry
+      docker_login:
+        registry_url: '{{ registry.url }}'
+        username: admin
+        password: '{{ registry.pass }}'
+        reauthorize: yes
+
+    - name: Build an image and push it to a private repo
+      docker_image:
+        build:
+          path: '.' 
+        name: '{{ registry.url }}/jenkins'
+        force_source: true
+        force_tag: true
+        push: true
+        tag: '{{ version }}'
+        source: build
+
+  delegate_to: localhost
+  tags: [never, jenkins-build]
+
+- block:
+    - name: Log into my registry
+      docker_login:
+        registry_url: '{{ registry.url }}'
+        username: admin
+        password: '{{ registry.pass }}'
+        reauthorize: yes
+
+    - name: Pull my custom image
+      docker_image:
+        name: '{{ registry.url }}/jenkins'
+        tag: '{{ version }}'
+        source: pull
+        force_source: true
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+
+  tags: jenkins

@@ -1,0 +1,4 @@
+---
+- hosts: managed_hosts
+  roles:
+    - host_setup

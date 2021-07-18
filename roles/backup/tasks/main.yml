@@ -1,0 +1,86 @@
+---
+- set_fact:
+    time: '{{ ansible_date_time.iso8601_basic_short }}'
+  when: time is not defined
+
+- name: Create ZFS snapshots
+  zfs:
+    name: '{{ zfs_pool }}/{{ item.value }}@backup-{{ time }}'
+    state: present
+  loop: '{{ zfs | dict2items }}'
+  become: true
+  delegate_to: "{{ groups['nas'][0] }}"
+  when: service_backup is not defined
+
+- block:
+    - name: Check if restic is here
+      stat:
+        path: '{{ restic.path }}'
+      register: restic_installed
+
+    - name: Self update restic
+      shell: '{{ restic.path }} self-update'
+      when: restic_installed.stat.exists
+
+    - name: Fail when restic is not installed
+      fail:
+        msg: 'Restic is not found in {{ restic.path }} wtf'
+      when: not restic_installed.stat.exists
+
+    - name: Sanitize service name
+      set_fact:
+        bucket: "testchamber-backup-{{ service | replace('_','-') }}"
+
+    - name: Create {{ service }} backup directory
+      file:
+        path: '/mnt/{{ bucket }}'
+        state: directory
+        owner: '{{ ansible_env.USER }}'
+        group: '{{ ansible_env.USER }}'
+      become: true
+
+    - name: Mount ZFS datasets
+      mount:
+        src: '{{ zfs_pool }}/{{ item.value }}@backup-{{ time }}'
+        path: '/mnt/{{ bucket }}/{{ item.key }}'
+        state: mounted
+        fstype: zfs
+      loop: '{{ zfs | dict2items }}'
+      become: true
+
+    - set_fact:
+        restic_cmd: 'RESTIC_PASSWORD={{ restic.pass }} B2_ACCOUNT_ID={{ b2.account_id }} B2_ACCOUNT_KEY={{ b2.account_key }} {{ restic.path }} -r b2:{{ bucket }}'
+
+    - name: Check if restic repo {{ bucket }} is here
+      shell: '{{ restic_cmd }} snapshots || {{ restic_cmd }} init'
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Backup {{ service }}
+      shell: '{{ restic_cmd }} backup /mnt/{{ bucket }}'
+      register: output
+      become: true
+
+    - debug: var=output.stdout_lines
+
+    - name: Prune backups for {{ service }}
+      shell: '{{ restic_cmd }} forget --keep-daily 1 --keep-weekly 3 --keep-monthly 6 --prune'
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Check restic repo for {{ service }}
+      shell: '{{ restic_cmd }} check'
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Unmount ZFS datasets
+      mount:
+        path: '/mnt/{{ bucket }}/{{ item.key }}'
+        state: unmounted
+      loop: '{{ zfs | dict2items }}'
+      become: true
+
+  delegate_to: "{{ groups['nas'][0] }}"

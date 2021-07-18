@@ -1,4 +1,8 @@
 ---
+- name: Set {{ service }} dir path
+  set_fact:
+    service_path: '{{ root_path }}/{{ service }}'
+
 - block:
     - name: Create {{ service }} directory on the edge
       file:
@@ -19,6 +23,7 @@
         name: '{{ service }}'
         compose:
           - '{{ service_path }}/{{ service }}.service.yml'
+        with_registry_auth: true
       register: stack_deployed
       become: true
 

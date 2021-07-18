@@ -3,7 +3,7 @@
 version: '{{ compose_version }}'
 services:
   {{ service }}:
-    image: jenkins/jenkins:{{ version }}
+    image: {{ registry.url }}/jenkins:{{ version }}
     # healthcheck:
     # test: ['CMD', 'curl', '-f', 'http://localhost:8080/login']
     deploy:

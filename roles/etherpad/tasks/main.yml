@@ -1,11 +1,19 @@
 ---
 - set_fact:
     service: '{{ role_name }}'
+  tags: always
 
 - import_role:
     name: services
     tasks_from: prepare
+  tags: etherpad
 
 - import_role:
     name: services
     tasks_from: uplift
+  tags: etherpad
+
+- import_role:
+    name: services
+    tasks_from: backup
+  tags: ['never', 'etherpad-backup']

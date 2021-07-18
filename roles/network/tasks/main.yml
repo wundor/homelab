@@ -1,0 +1,6 @@
+---
+- name: Set up DNS records
+  import_tasks: dns.yml
+
+- name: Set up static DHCP leases
+  import_tasks: dhcp.yml

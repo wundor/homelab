@@ -1,0 +1,3 @@
+Host *
+    User ci
+    IdentityFile /.ssh/id_ecdsa

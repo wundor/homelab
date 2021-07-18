@@ -10,3 +10,6 @@
     owner: '{{ ansible_env.USER }}'
     group: '{{ ansible_env.USER }}'
   become: true
+
+# create zfs datasets
+# zfs create -o sharenfs="rw=@192.168.0.0/16,no_root_squash" tank/SERVICE

@@ -1,19 +1,5 @@
 ---
 - block:
-    - name: Get existing users
-      shell: "getent passwd | awk -F: '$3 > 1000 {print $1}'"
-      changed_when: false
-      register: users
-
-    - name: Cleanup users
-      user:
-        name: '{{ item }}'
-        state: absent
-        remove: true
-        force: true
-      loop: '{{ users.stdout_lines }}'
-      when: item not in ignored_users
-
     - name: Disable password ssh login
       lineinfile:
         path: /etc/ssh/sshd_config

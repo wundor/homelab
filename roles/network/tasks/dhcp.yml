@@ -1,0 +1,33 @@
+---
+- name: Set static DHCP leases for equestria
+  raw: 'ip dhcp host {{ inventory_hostname }} {{ mac }} {{ ansible_host }}'
+  when: "'eq' in group_names and 'router' not in inventory_hostname and mac is defined"
+  delegate_to: eq-router.lan.testchamber.one
+
+- name: Get static DHCP leases for narnia
+  raw: |
+    uci show dhcp|grep 'dhcp.@host\['| sed 's/.*\[\(.*\)\].*/\1/'|sort -u
+  register: lease_numbers
+  when: groups['na'] is defined
+  run_once: true
+  delegate_to: na-router.lan.testchamber.one
+
+- name: Remove static DHCP leases for narnia
+  raw: 'uci del dhcp.@host[{{ item }}]'
+  loop: '{{ lease_numbers.stdout_lines }}'
+  when: groups['na'] is defined
+  run_once: true
+  delegate_to: na-router.lan.testchamber.one
+
+- name: Set static DHCP leases for narnia
+  raw: '{{ item }}'
+  loop:
+    - 'uci add dhcp host'
+    - 'uci set dhcp.@host[-1].name="{{ inventory_hostname }}"'
+    - 'uci set dhcp.@host[-1].mac="{{ mac }}"'
+    - 'uci set dhcp.@host[-1].ip="{{ ansible_host }}"'
+    - 'uci set dhcp.@host[-1].dns="1"'
+    - 'uci commit dhcp'
+    - '/etc/init.d/dnsmasq restart'
+  when: "'na' in group_names and 'router' not in inventory_hostname and mac is defined"
+  delegate_to: na-router.lan.testchamber.one

@@ -1,0 +1,39 @@
+---
+- block:
+    - name: Get existing users
+      shell: "getent passwd | awk -F: '$3 > 1000 {print $1}'"
+      changed_when: false
+      register: users
+
+    - name: Cleanup users
+      user:
+        name: '{{ item }}'
+        state: absent
+        remove: true
+        force: true
+      loop: '{{ users.stdout_lines }}'
+      when: item not in ignored_users
+
+    - name: Add custom sudoers file
+      copy:
+        src: ci-sudoers
+        dest: /etc/sudoers.d/ci
+        owner: root
+        group: root
+        mode: '0440'
+        force: yes
+
+    - name: Create ci user
+      user:
+        name: 'ci'
+        state: present
+        shell: /bin/bash
+
+    - name: Add SSH public keys for ci user
+      authorized_key:
+        user: 'ci'
+        state: present
+        exclusive: true
+        key: "{{ lookup('file', 'files/ci.pub') }}"
+
+  become: true

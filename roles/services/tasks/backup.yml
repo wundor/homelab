@@ -1,0 +1,32 @@
+---
+- name: Remove {{ service }} stack
+  docker_stack:
+    name: '{{ service }}'
+    state: absent
+  delegate_to: "{{ groups['edge'][0] }}"
+  when: "'jenkins' is not in service"
+
+- set_fact:
+    time: '{{ ansible_date_time.iso8601_basic_short }}'
+
+- name: Pause for stack removal
+  pause:
+    minutes: 1
+  when: "'jenkins' is not in service"
+
+- name: Create ZFS snapshots
+  zfs:
+    name: '{{ zfs_pool }}/{{ item.value }}@backup-{{ time }}'
+    state: present
+  loop: '{{ zfs | dict2items }}'
+  become: true
+  delegate_to: "{{ groups['nas'][0] }}"
+  register: service_backup
+
+- import_role:
+    name: services
+    tasks_from: uplift
+  when: "'jenkins' is not in service"
+
+- import_role:
+    name: backup

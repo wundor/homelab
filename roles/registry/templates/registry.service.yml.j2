@@ -9,10 +9,11 @@ services:
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
-        - 'traefik.http.routers.{{ service }}be.rule=Host(`{{ dns['be'] }}`)'
-        - 'traefik.http.routers.{{ service }}be.tls=true'
-        - 'traefik.http.routers.{{ service }}be.entrypoints=https'
-        - 'traefik.http.services.{{ service }}be.loadbalancer.server.port={{ exposed_port['be'] }}'
+        - 'traefik.http.routers.{{ service }}-be.rule=Host(`{{ dns['be'] }}`)'
+        - 'traefik.http.routers.{{ service }}-be.tls=true'
+        - 'traefik.http.routers.{{ service }}-be.entrypoints=https'
+        - 'traefik.http.routers.{{ service }}-be.middlewares=auth-traefik'
+        - 'traefik.http.services.{{ service }}-be.loadbalancer.server.port={{ exposed_port['be'] }}'
     volumes:
       {{ volume_nocopy }}
         source: {{ service }}
@@ -25,16 +26,17 @@ services:
     image: konradkleine/docker-registry-frontend:{{ version['fe'] }}
     environment:
       - ENV_DOCKER_REGISTRY_HOST={{ service }}
-      - ENV_DOCKER_REGISTRY_PORT=5000
+      - ENV_DOCKER_REGISTRY_PORT={{ exposed_port['be'] }}
     deploy:
       {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
-        - 'traefik.http.routers.{{ service }}fe.rule=Host(`{{ dns['fe'] }}`)'
-        - 'traefik.http.routers.{{ service }}fe.tls=true'
-        - 'traefik.http.routers.{{ service }}fe.entrypoints=https'
-        - 'traefik.http.services.{{ service }}fe.loadbalancer.server.port={{ exposed_port['fe'] }}'
+        - 'traefik.http.routers.{{ service }}-fe.rule=Host(`{{ dns['fe'] }}`)'
+        - 'traefik.http.routers.{{ service }}-fe.tls=true'
+        - 'traefik.http.routers.{{ service }}-fe.entrypoints=https'
+        - 'traefik.http.routers.{{ service }}-fe.middlewares=auth-traefik'
+        - 'traefik.http.services.{{ service }}-fe.loadbalancer.server.port={{ exposed_port['fe'] }}'
     networks:
       - {{ traefik_network }}
       - {{ service }}
