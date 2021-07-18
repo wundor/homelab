@@ -4,6 +4,7 @@
     name: '{{ service }}'
     state: absent
   delegate_to: "{{ groups['edge'][0] }}"
+  become: true
   when: "'jenkins' is not in service"
 
 - set_fact:
