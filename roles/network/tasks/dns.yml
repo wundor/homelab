@@ -1,60 +1,64 @@
 ---
 - block:
-    - name: Create a domain
-      digital_ocean_domain:
-        name: '{{ domain }}'
-        oauth_token: '{{ do_auth_token }}'
-        state: present
-      run_once: true
-
     - name: Create A record for domain
-      community.digitalocean.digital_ocean_domain_record:
-        oauth_token: '{{ do_auth_token }}'
-        state: present
-        domain: '{{ domain }}'
+      cloudflare_dns:
+        zone: '{{ domain }}'
+        record: '@'
         type: A
-        name: '@'
-        data: '{{ public_ip }}'
+        proxied: true
+        value: '{{ public_ip }}'
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
       run_once: true
 
     - name: Create A records for internal hosts
-      community.digitalocean.digital_ocean_domain_record:
-        oauth_token: '{{ do_auth_token }}'
-        state: present
-        domain: '{{ domain }}'
+      cloudflare_dns:
+        zone: '{{ domain }}'
+        record: '{{ inventory_hostname }}'
         type: A
-        name: '{{  inventory_hostname.split(".")[0] | lower }}.lan'
-        data: '{{ ansible_host }}'
+        value: '{{ ansible_host }}'
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
       when: "'traefik' not in group_names"
 
     - name: Create A record for ingress host
-      community.digitalocean.digital_ocean_domain_record:
-        oauth_token: '{{ do_auth_token }}'
-        state: present
-        domain: '{{ domain }}'
+      cloudflare_dns:
+        zone: '{{ domain }}'
+        record: 'lan'
         type: A
-        name: 'lan'
-        data: "{{ hostvars[groups['edge'][0]]['ansible_host'] }}"
+        value: "{{ hostvars[groups['edge'][0]]['ansible_host'] }}"
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
       run_once: true
 
-    - name: Create CNAME record for public services
-      community.digitalocean.digital_ocean_domain_record:
-        oauth_token: '{{ do_auth_token }}'
-        state: present
-        domain: '{{ domain }}'
-        type: CNAME
-        name: '*'
-        data: '{{ domain }}'
-      run_once: true
+    - name: Create A records for Traefik routed hosts
+      cloudflare_dns:
+        record: '{{ inventory_hostname }}'
+        value: "{{ hostvars[groups['edge'][0]]['ansible_host'] }}"
+        type: A
+        zone: '{{ domain }}'
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
+      when: "'traefik' in group_names"
 
     - name: Create CNAME record for lan services
-      community.digitalocean.digital_ocean_domain_record:
-        oauth_token: '{{ do_auth_token }}'
-        state: present
-        domain: '{{ domain }}'
+      cloudflare_dns:
+        record: '*.lan.{{ domain }}'
+        value: '{{ lan }}'
         type: CNAME
-        name: '*.lan'
-        data: '{{ lan }}'
+        zone: '{{ domain }}'
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
       run_once: true
+
+    # - name: Create CNAME record for public services
+    #   cloudflare_dns:
+    #     record: '*.{{ domain }}'
+    #     value: "{{ domain }}"
+    #     type: CNAME
+    #     zone: '{{ domain }}'
+    #     account_email: cloudflare@{{ domain }}
+    #     account_api_key: '{{ cf_api_token }}'
+    #   run_once: true
 
   delegate_to: localhost

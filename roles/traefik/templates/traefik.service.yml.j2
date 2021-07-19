@@ -10,8 +10,8 @@ services:
       - target: 443
         published: 443
     environment:
-      - DO_AUTH_TOKEN={{ do_auth_token }}
-      - DO_PROPAGATION_TIMEOUT=300
+      - CLOUDFLARE_EMAIL=cloudflare@testchamber.one
+      - CLOUDFLARE_API_KEY={{ cf_api_token }}
     volumes:
       - type: bind
         source: /var/run/docker.sock
@@ -42,7 +42,7 @@ services:
       - --certificatesresolvers.wild.acme.email=le@testchamber.one
       - --certificatesresolvers.wild.acme.storage=/certificates/acme.json
       - --certificatesresolvers.wild.acme.dnschallenge=true
-      - --certificatesresolvers.wild.acme.dnschallenge.provider=digitalocean
+      - --certificatesresolvers.wild.acme.dnschallenge.provider=cloudflare
       - --certificatesresolvers.wild.acme.dnschallenge.delaybeforecheck=0
       - --certificatesresolvers.wild.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
     deploy:
