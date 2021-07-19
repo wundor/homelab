@@ -2,7 +2,7 @@
 root_path: '/opt/homelab'
 compose_version: '3.8'
 traefik_network: traefik-public
-nfs_source: "nfsvers=4,addr={{ groups['nas'][0] }},nolock,soft,rw"
+nfs_source: "nfsvers=4,addr={{ hostvars[groups['nas'][0]]['ansible_host'] }},nolock,soft,rw"
 
 nfs_volume: |-
   driver: local

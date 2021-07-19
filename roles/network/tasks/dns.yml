@@ -25,6 +25,7 @@
         type: A
         name: '{{  inventory_hostname.split(".")[0] | lower }}.lan'
         data: '{{ ansible_host }}'
+      when: "'traefik' not in group_names"
 
     - name: Create A record for ingress host
       community.digitalocean.digital_ocean_domain_record:
