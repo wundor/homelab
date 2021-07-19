@@ -28,7 +28,7 @@ sections:
       - title: 'Canterlot'
         description: 'Proxmox'
         icon: 'https://camo.githubusercontent.com/2df2ac41e1b8a1484be236c75e395981b31bfd670eff46b5c182ea0be9475310/68747470733a2f2f7777772e70726f786d6f782e636f6d2f696d616765732f70726f786d6f782f50726f786d6f785f73796d626f6c5f7374616e646172645f6865782e706e67'
-        url: 'https://canterlot.lan.testchamber.one/'
+        url: 'https://pve1.lan.testchamber.one/'
       - title: 'NA Router'
         description: 'tplink archer C7'
         icon: 'https://icons.iconarchive.com/icons/icons8/ios7/512/Network-Router-icon.png'
