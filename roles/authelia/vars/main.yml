@@ -1,6 +1,7 @@
 ---
 version: '4.29'
-dns: auth.{{ domain }}
+dns: 
+  fe: auth.{{ lan }}
 exposed_port: 9091
 zfs:
   app: authelia

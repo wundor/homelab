@@ -1,4 +1,5 @@
 ---
 version: latest
-dns: ss.{{ lan }}
+dns: 
+  fe: ss.{{ lan }}
 exposed_port: 80

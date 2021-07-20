@@ -1,3 +1,4 @@
 ---
 version: v2.4
-dns: t.{{ lan }}
+dns: 
+  fe: t.{{ lan }}

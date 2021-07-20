@@ -1,6 +1,7 @@
 ---
 version: '1.8.0' # pinned
-dns: pad.{{ domain }}
+dns: 
+  fe: pad.{{ domain }}
 exposed_port: 8080
 zfs:
   app: etherpad/app

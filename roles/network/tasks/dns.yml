@@ -11,6 +11,17 @@
         account_api_key: '{{ cf_api_token }}'
       run_once: true
 
+    - name: Create A record for VPN
+      cloudflare_dns:
+        zone: '{{ domain }}'
+        record: 'vpn'
+        type: A
+        proxied: true
+        value: '{{ public_ip }}'
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
+      run_once: true
+
     - name: Create A records for internal hosts
       cloudflare_dns:
         zone: '{{ domain }}'
@@ -50,15 +61,5 @@
         account_email: cloudflare@{{ domain }}
         account_api_key: '{{ cf_api_token }}'
       run_once: true
-
-    # - name: Create CNAME record for public services
-    #   cloudflare_dns:
-    #     record: '*.{{ domain }}'
-    #     value: "{{ domain }}"
-    #     type: CNAME
-    #     zone: '{{ domain }}'
-    #     account_email: cloudflare@{{ domain }}
-    #     account_api_key: '{{ cf_api_token }}'
-    #   run_once: true
 
   delegate_to: localhost

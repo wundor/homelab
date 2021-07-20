@@ -1,6 +1,6 @@
 server {
     listen       80;
-    server_name  host.{{ dns }};
+    server_name  host.{{ dns.fe }};
 
     location / {
         root   /usr/share/nginx/html;

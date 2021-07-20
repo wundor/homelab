@@ -73,7 +73,7 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
-      - OVERWRITEHOST={{ dns }}
+      - OVERWRITEHOST={{ dns.fe }}
       - OVERWRITEPROTOCOL=https
       - NEXTCLOUD_DATA_DIR=/mnt/nextcloud
     deploy:

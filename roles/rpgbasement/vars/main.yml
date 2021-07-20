@@ -1,5 +1,6 @@
 ---
-dns: rpgbasement.xyz
+dns: 
+  fe: rpgbasement.xyz
 exposed_port: 2368
 zfs:
   blog: rpgbasement/blog

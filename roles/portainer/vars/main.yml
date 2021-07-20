@@ -1,4 +1,5 @@
 ---
 version: '2.6.1'
-dns: swarm.{{ lan }}
+dns: 
+  fe: swarm.{{ lan }}
 exposed_port: 9000

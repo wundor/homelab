@@ -1,6 +1,7 @@
 ---
 version: v1.2.20
-dns: kan.{{ domain }}
+dns: 
+  fe: kan.{{ domain }}
 exposed_port: 80
 zfs:
   app: kanboard/app

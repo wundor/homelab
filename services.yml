@@ -22,6 +22,8 @@
     - registry
     - qbittorrent
     - jellyfin
+    - authelia
+    - rss_my_ass
 
 - hosts: wan
   roles:
@@ -30,9 +32,7 @@
     - ttrss
     - nextcloud
     - rpgbasement
-    - rss_my_ass
     - rss_bridge
-    - authelia
 
 - hosts: docker
   tasks:

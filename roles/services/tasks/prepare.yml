@@ -21,3 +21,16 @@
   when: zfs is defined
   become: true
   delegate_to: "{{ groups['nas'][0] }}"
+
+- name: Create A records for {{ service }}
+  cloudflare_dns:
+    zone: '{{ domain }}'
+    record: '{{ item.value }}'
+    type: A
+    value: '{{ public_ip }}'
+    proxied: true
+    account_email: cloudflare@{{ domain }}
+    account_api_key: '{{ cf_api_token }}'
+  loop: '{{ dns | dict2items }}'
+  when: "lan not in item.value and domain in item.value"
+  delegate_to: localhost

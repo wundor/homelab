@@ -1,6 +1,7 @@
 ---
 version: v2.7.0
-dns: ping.{{ lan }}
+dns: 
+  fe: ping.{{ lan }}
 exposed_port: 8080
 
 discord_webhook_url: !vault |

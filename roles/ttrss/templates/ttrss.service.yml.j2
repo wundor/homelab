@@ -5,7 +5,7 @@ services:
   {{ service }}:
     image: wangqiru/ttrss:{{ version }}
     environment:
-      - SELF_URL_PATH=https://{{ dns }}/
+      - SELF_URL_PATH=https://{{ dns.fe }}/
       - DB_PASS={{ db_pass }}
       - DB_HOST=postgres
     volumes:

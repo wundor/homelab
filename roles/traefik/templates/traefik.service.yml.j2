@@ -64,7 +64,7 @@ services:
         - 'traefik.http.routers.wildcard-certs.tls.domains[2].main=rss-my-ass.ga'
         - 'traefik.http.routers.wildcard-certs.tls.domains[2].sans=*.rss-my-ass.ga'
           # dashboard
-        - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns }}`)'
+        - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns.fe }}`)'
         - 'traefik.http.routers.{{ service }}.tls=true'
         - 'traefik.http.routers.{{ service }}.entrypoints=https'
         - 'traefik.http.routers.{{ service }}.service=api@internal'

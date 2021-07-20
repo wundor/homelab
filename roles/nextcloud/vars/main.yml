@@ -1,6 +1,7 @@
 ---
 version: '21'
-dns: cloud.{{ domain }}
+dns: 
+  fe: cloud.{{ domain }}
 exposed_port: 80
 zfs:
   app: nextcloud/app

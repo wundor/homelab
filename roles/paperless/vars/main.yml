@@ -1,6 +1,7 @@
 ---
 version: '1.4.5'
-dns: paper.{{ lan }}
+dns: 
+  fe: paper.{{ lan }}
 exposed_port: 8000
 zfs:
   app: paperless/app

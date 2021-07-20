@@ -5,7 +5,7 @@ services:
   {{ service }}:
     image: ghost:4
     environment:
-      url: https://{{ dns }}
+      url: https://{{ dns.fe }}
       GHOST_CONTENT: /var/lib/ghost/content
       NODE_ENV: production
     deploy:
@@ -32,7 +32,7 @@ services:
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
-        - 'traefik.http.routers.podhost.rule=Host(`host.{{ dns }}`)'
+        - 'traefik.http.routers.podhost.rule=Host(`host.{{ dns.fe }}`)'
         - 'traefik.http.routers.podhost.tls=true'
         - 'traefik.http.routers.podhost.entrypoints=https'
         - 'traefik.http.services.podhost.loadbalancer.server.port=80'
