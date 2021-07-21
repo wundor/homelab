@@ -14,19 +14,14 @@ services:
     deploy:
       {{ placement }}
       labels:
-        - 'traefik.enable=true'
-        - 'traefik.docker.network={{ traefik_network }}'
-        - 'traefik.http.routers.{{ service }}-main.rule=Host(`{{ dns.lan }}`)'
-        - 'traefik.http.routers.{{ service }}-main.service={{ service }}'
-        - 'traefik.http.routers.{{ service }}-main.tls=true'
-        - 'traefik.http.routers.{{ service }}-main.entrypoints=https'
-        - 'traefik.http.routers.{{ service }}-main.middlewares=authelia@docker'
-        - 'traefik.http.services.{{ service }}-main.loadbalancer.server.port={{ exposed_port }}'
-        - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns.public }}`) && Query(`action=display`)'
+        {{ traefik_default_labels }}
         - 'traefik.http.routers.{{ service }}.service={{ service }}'
-        - 'traefik.http.routers.{{ service }}.tls=true'
-        - 'traefik.http.routers.{{ service }}.entrypoints=https'
-        - 'traefik.http.services.{{ service }}.loadbalancer.server.port={{ exposed_port }}'
+        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
+        - 'traefik.http.routers.{{ service }}-pub.rule=Host(`{{ dns.public }}`) && Query(`action=display`)'
+        - 'traefik.http.routers.{{ service }}-pub.service={{ service }}'
+        - 'traefik.http.routers.{{ service }}-pub.tls=true'
+        - 'traefik.http.routers.{{ service }}-pub.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-pub.loadbalancer.server.port={{ exposed_port }}'
 
 networks:
   {{ traefik_network }}:

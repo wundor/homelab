@@ -1,6 +1,6 @@
 ---
 version: '2021-04-25'
 dns:
+  fe: rss-my-ass.{{ lan }}
   public: rss-my-ass.ga
-  lan: rss-my-ass.{{ lan }}
 exposed_port: 80
