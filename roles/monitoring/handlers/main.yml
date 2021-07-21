@@ -1,0 +1,10 @@
+---
+- name: reload_alertmanager_config
+  shell: docker service update --force monitoring_alertmanager
+  delegate_to: "{{ groups['edge'][0] }}"
+  when: 'not stack_deployed.changed'
+
+- name: reload_prometheus_config
+  shell: docker service update --force monitoring_prometheus
+  delegate_to: "{{ groups['edge'][0] }}"
+  when: 'not stack_deployed.changed'

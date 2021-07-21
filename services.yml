@@ -24,6 +24,7 @@
     - jellyfin
     - authelia
     - rss_my_ass
+    - monitoring
 
 - hosts: wan
   roles:

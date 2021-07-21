@@ -1,0 +1,15 @@
+{{ ansible_managed | comment }}
+---
+global:
+  resolve_timeout: 1m
+  slack_api_url: '{{ alertmanager.discord_webhook }}'
+
+route:
+  receiver: discord_webhook
+  group_by: [alertname]
+{% raw %}
+receivers:
+- name: 'discord_webhook'
+  webhook_configs:
+  - url: http://discord:9094
+{% endraw %}

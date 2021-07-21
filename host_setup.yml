@@ -2,3 +2,9 @@
 - hosts: managed_hosts
   roles:
     - host_setup
+
+# ansible-galaxy install cloudalchemy.node_exporter
+- hosts: managed_hosts
+  roles:
+    - cloudalchemy.node_exporter
+  tags: node_exporter

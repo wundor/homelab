@@ -1,0 +1,38 @@
+{{ ansible_managed | comment }}
+---
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'homelab'
+
+rule_files:
+  - alerts.yml
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "alertmanager:9093"
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: node
+    static_configs:
+      - targets: ['{{ inventory_hostname }}:9100'{% for host in groups['managed_hosts'] %}, '{{ host }}:9100'{% endfor %}]
+
+  - job_name: traefik
+    dns_sd_configs:
+    - names:
+      - 'tasks.traefik'
+      type: 'A'
+      port: 8080
+  - job_name: 'cadvisor'
+    dns_sd_configs:
+    - names:
+      - 'tasks.cadvisor'
+      type: 'A'
+      port: 8080

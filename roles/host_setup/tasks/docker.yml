@@ -43,5 +43,23 @@
         groups: docker
         append: yes
 
+    - name: Create docker daemon.json
+      set_fact:
+        daemon_json:
+          'metrics-addr': '0.0.0.0:9323'
+          'experimental': true
+
+    - name: Write daemon.json
+      copy: 
+        content: "{{ daemon_json | to_nice_json }}" 
+        dest: /etc/docker/daemon.json
+      register: new_config
+
+    - name: Restart docker service
+      service:
+        name: docker
+        state: restarted
+      when: new_config.changed
+
   become: true
   when: "'docker' in group_names"

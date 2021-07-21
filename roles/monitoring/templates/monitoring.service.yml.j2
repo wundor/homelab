@@ -1,0 +1,104 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  prometheus:
+    image: prom/prometheus:{{ prometheus.version }}
+    volumes:
+      - {{ service_path }}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - {{ service_path }}/prometheus/alerts.yml:/etc/prometheus/alerts.yml
+      {{ volume_nocopy }}
+        source: {{ service }}_prometheus
+        target: /prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+    networks:
+      - {{ traefik_network }}
+      - default
+    deploy:
+      {{ placement }}
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.prometheus.rule=Host(`{{ dns.prometheus }}`)'
+        - 'traefik.http.routers.prometheus.tls=true'
+        - 'traefik.http.routers.prometheus.entrypoints=https'
+        # - 'traefik.http.routers.prometheus.middlewares=authelia@docker'
+        - 'traefik.http.services.prometheus.loadbalancer.server.port={{ exposed_port.prometheus }}'
+
+  alertmanager:
+    image: quay.io/prometheus/alertmanager:{{ alertmanager.version }}
+    volumes:
+      - {{ service_path }}/alertmanager/config.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - --web.external-url=https://{{ dns.alertmanager }}
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    networks:
+      - {{ traefik_network }}
+      - default
+    deploy:
+      {{ placement }}
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.alertmanager.rule=Host(`{{ dns.alertmanager }}`)'
+        - 'traefik.http.routers.alertmanager.tls=true'
+        - 'traefik.http.routers.alertmanager.entrypoints=https'
+        # - 'traefik.http.routers.alertmanager.middlewares=authelia@docker'
+        - 'traefik.http.services.alertmanager.loadbalancer.server.port={{ exposed_port.alertmanager }}'
+
+  discord:
+    image: benjojo/alertmanager-discord
+    environment:
+      - DISCORD_WEBHOOK={{ alertmanager.discord_webhook }}
+
+  cadvisor:
+    image: google/cadvisor
+    command: -logtostderr -docker_only
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    deploy:
+      mode: global
+
+  grafana:
+    image: grafana/grafana:{{ grafana.version }}
+    volumes:
+      - {{ service_path }}/grafana/:/etc/grafana/provisioning/
+      {{ volume_nocopy }}
+        source: {{ service }}_grafana
+        target: /var/lib/grafana
+    networks:
+      - {{ traefik_network }}
+      - default
+    environment:
+      - GF_SECURITY_ADMIN_USER={{ grafana.username }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ grafana.password }}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    healthcheck:
+      test: 'wget -q -Y off -O /dev/null http://localhost:3000/api/health > /dev/null 2>&1'
+    deploy:
+      {{ placement }}
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.grafana.rule=Host(`{{ dns.grafana }}`)'
+        - 'traefik.http.routers.grafana.tls=true'
+        - 'traefik.http.routers.grafana.entrypoints=https'
+        - 'traefik.http.services.grafana.loadbalancer.server.port={{ exposed_port.grafana }}'
+
+networks:
+  {{ traefik_network }}:
+    external: true
+
+volumes:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

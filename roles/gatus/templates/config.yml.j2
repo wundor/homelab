@@ -26,6 +26,18 @@ services:
     group: lan
     url: 'https://hub.{{ lan }}'
     {{ default_check }}
+  - name: Grafana
+    group: lan
+    url: 'https://mon.{{ lan }}'
+    {{ default_check }}
+  - name: Prometheus
+    group: lan
+    url: 'https://prom.{{ lan }}'
+    {{ default_check }}
+  - name: Alertmanager
+    group: lan
+    url: 'https://alerts.{{ lan }}'
+    {{ default_check }}
   - name: Portainer
     group: lan
     url: 'https://swarm.{{ lan }}'

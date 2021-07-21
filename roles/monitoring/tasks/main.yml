@@ -1,0 +1,87 @@
+---
+- block:
+    - set_fact:
+        service: '{{ role_name }}'
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - name: Create Prometheus directory
+      file:
+        dest: '{{ service_path }}/prometheus'
+        state: directory
+        owner: '{{ ansible_env.USER }}'
+        group: '{{ ansible_env.USER }}'
+      become: true
+
+    - name: Generate Prometheus config file
+      template:
+        src: prometheus/prometheus.yml.j2
+        dest: '{{ service_path }}/prometheus/prometheus.yml'
+      notify: reload_prometheus_config
+
+    - name: Copy Prometheus alert rules
+      copy:
+        src: prometheus/alerts.yml
+        dest: '{{ service_path }}/prometheus/alerts.yml'
+      notify: reload_prometheus_config
+
+    - name: Create Alertmanager directory
+      file:
+        path: '{{ service_path }}/alertmanager'
+        state: directory
+        owner: '{{ ansible_env.USER }}'
+        group: '{{ ansible_env.USER }}'
+      become: true
+
+    - name: Generate Alertmanager config file
+      template:
+        src: alertmanager/config.yml.j2
+        dest: '{{ service_path }}/alertmanager/config.yml'
+      notify: reload_alertmanager_config
+
+    - name: Create Grafana directories
+      file:
+        path: '{{ item }}'
+        state: directory
+        owner: '{{ ansible_env.USER }}'
+        group: '{{ ansible_env.USER }}'
+      loop:
+        - '{{ service_path }}/grafana'
+        - '{{ service_path }}/grafana/datasources'
+        - '{{ service_path }}/grafana/dashboards'
+      become: true
+
+    - name: Generate datasource file for Prometheus
+      template:
+        src: grafana/datasources-prometheus.yml.j2
+        dest: '{{ service_path }}/grafana/datasources/prometheus.yml'
+
+    - name: Copy Grafana provisioned config
+      copy:
+        src: 'grafana/dashboards'
+        dest: '{{ service_path }}/grafana'
+
+    - name: Set correct rights for Grafana dataset
+      file:
+        path: '/{{ zfs_pool }}/{{ service }}/grafana'
+        state: directory
+        recurse: true
+        owner: 472
+      become: true
+      delegate_to: "{{ groups['nas'][0] }}"
+
+    - name: Set correct rights for Prometheus dataset
+      file:
+        path: '/{{ zfs_pool }}/{{ service }}/prometheus'
+        state: directory
+        recurse: true
+        owner: nobody
+      become: true
+      delegate_to: "{{ groups['nas'][0] }}"
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: monitoring
