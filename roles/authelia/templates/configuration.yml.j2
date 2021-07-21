@@ -44,14 +44,17 @@ access_control:
 
   rules:
     - domain:
-        - ping.{{ lan }}
-        - hub.{{ lan }}
-        - rss-my-ass.{{ lan }}
-        - registry.{{ lan }}
-        - reg.{{ lan }}
-        - t.{{ lan }}
-        - sync.{{ lan }}
-        - p2p.{{ lan }}
+        - '*.{{ lan }}'
+        # - hub.{{ lan }}
+        # - rss-my-ass.{{ lan }}
+        # - registry.{{ lan }}
+        # - reg.{{ lan }}
+        # - t.{{ lan }}
+        # - sync.{{ lan }}
+        # - p2p.{{ lan }}
+        # - mon.{{ lan }}
+        # - prom.{{ lan }}
+        # - alerts.{{ lan }}
       policy: one_factor
 
 session:

@@ -68,8 +68,8 @@ sections:
         url: 'https://t.lan.testchamber.one/'
       - title: 'Authelia'
         icon: 'https://opencollective-production.s3.us-west-1.amazonaws.com/bf936590-3aae-11ea-a944-d5e45fdc60ab.png'
-        url: 'https://auth.testchamber.one/'
-        statusCheck: false
+        url: 'https://auth.lan.testchamber.one/'
+        # statusCheck: false
   - name: 'SYNC'
     items:
       - title: 'EQ'

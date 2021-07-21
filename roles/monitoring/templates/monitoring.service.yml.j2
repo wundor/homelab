@@ -24,7 +24,7 @@ services:
         - 'traefik.http.routers.prometheus.rule=Host(`{{ dns.prometheus }}`)'
         - 'traefik.http.routers.prometheus.tls=true'
         - 'traefik.http.routers.prometheus.entrypoints=https'
-        # - 'traefik.http.routers.prometheus.middlewares=authelia@docker'
+        - 'traefik.http.routers.prometheus.middlewares=authelia@docker'
         - 'traefik.http.services.prometheus.loadbalancer.server.port={{ exposed_port.prometheus }}'
 
   alertmanager:
@@ -45,7 +45,7 @@ services:
         - 'traefik.http.routers.alertmanager.rule=Host(`{{ dns.alertmanager }}`)'
         - 'traefik.http.routers.alertmanager.tls=true'
         - 'traefik.http.routers.alertmanager.entrypoints=https'
-        # - 'traefik.http.routers.alertmanager.middlewares=authelia@docker'
+        - 'traefik.http.routers.alertmanager.middlewares=authelia@docker'
         - 'traefik.http.services.alertmanager.loadbalancer.server.port={{ exposed_port.alertmanager }}'
 
   discord:
