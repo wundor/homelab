@@ -36,3 +36,18 @@ scrape_configs:
       - 'tasks.cadvisor'
       type: 'A'
       port: 8080
+  - job_name: 'snmp'
+    static_configs:
+      - targets:
+        - 192.168.5.1  # SNMP device.
+        - 192.168.10.1  # SNMP device.
+    metrics_path: /snmp
+    params:
+      module: [if_mib]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: snmpexporter:9116

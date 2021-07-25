@@ -52,6 +52,8 @@ services:
     image: benjojo/alertmanager-discord
     environment:
       - DISCORD_WEBHOOK={{ alertmanager.discord_webhook }}
+    deploy:
+      {{ placement }}
 
   cadvisor:
     image: google/cadvisor
@@ -64,6 +66,11 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     deploy:
       mode: global
+
+  snmpexporter:
+    image: prom/snmp-exporter
+    deploy:
+      {{ placement }}
 
   grafana:
     image: grafana/grafana:{{ grafana.version }}
