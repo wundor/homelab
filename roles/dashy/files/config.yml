@@ -52,7 +52,7 @@ sections:
         url: 'https://registry.lan.testchamber.one/'
       - title: 'DNS'
         icon: 'https://developer.asustor.com/uploadIcons/0020_999_1595573028_AdGuardhome_256.png'
-        url: 'http://dns.lan.testchamber.one'
+        url: 'http://adguard.lan.testchamber.one'
       - title: 'Healthchecks'
         description: 'Gatus'
         icon: 'https://status.vps1.phunsoft.de/img/logo.png'

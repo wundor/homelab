@@ -30,7 +30,6 @@
         value: '{{ ansible_host }}'
         account_email: cloudflare@{{ domain }}
         account_api_key: '{{ cf_api_token }}'
-      when: "'traefik' not in group_names"
 
     - name: Create A record for ingress host
       cloudflare_dns:
@@ -41,16 +40,6 @@
         account_email: cloudflare@{{ domain }}
         account_api_key: '{{ cf_api_token }}'
       run_once: true
-
-    - name: Create A records for Traefik routed hosts
-      cloudflare_dns:
-        record: '{{ inventory_hostname }}'
-        value: "{{ hostvars[groups['edge'][0]]['ansible_host'] }}"
-        type: A
-        zone: '{{ domain }}'
-        account_email: cloudflare@{{ domain }}
-        account_api_key: '{{ cf_api_token }}'
-      when: "'traefik' in group_names"
 
     - name: Create CNAME record for lan services
       cloudflare_dns:

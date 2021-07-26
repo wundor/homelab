@@ -9,18 +9,10 @@ http:
         - default-headers
       tls: {}
       service: proxmox
-    netdata:
-      entryPoints:
-        - 'https'
-      rule: 'Host(`netdata.lan.testchamber.one`)'
-      middlewares:
-        - default-headers
-      tls: {}
-      service: netdata
     adguard:
       entryPoints:
         - 'https'
-      rule: 'Host(`dns.lan.testchamber.one`)'
+      rule: 'Host(`adguard.lan.testchamber.one`)'
       middlewares:
         - default-headers
       tls: {}
@@ -30,11 +22,6 @@ http:
       loadBalancer:
         servers:
           - url: 'https://192.168.5.10:8006'
-        passHostHeader: true
-    netdata:
-      loadBalancer:
-        servers:
-          - url: 'http://192.168.5.10:19999'
         passHostHeader: true
     adguard:
       loadBalancer:
