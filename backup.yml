@@ -63,7 +63,6 @@
     zfs:
       files: files
       photos: photos
-      books: books
     healthcheck_url: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       33386332376433633437336333383966323939386235343430636431336563393431666338653335
