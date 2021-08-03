@@ -1,5 +1,5 @@
 ---
-version: '1' # I'm using my custom dockerfile
+version: '2' # I'm using my custom dockerfile
 dns: 
   fe: ci.{{ lan }}
 exposed_port: 8080

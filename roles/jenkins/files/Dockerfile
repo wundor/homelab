@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.289.2-lts
+FROM jenkins/jenkins:2.289.3-lts
 
 USER root
 RUN apt update && \

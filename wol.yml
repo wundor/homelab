@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Send WOL packets
+      wakeonlan:
+        mac: '{{ mac }}'
+      delegate_to: localhost
+      when: mac is defined
