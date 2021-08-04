@@ -37,7 +37,6 @@
         state: directory
         owner: '{{ ansible_env.USER }}'
         group: '{{ ansible_env.USER }}'
-      become: true
 
     - name: Mount ZFS datasets
       mount:
@@ -46,7 +45,6 @@
         state: mounted
         fstype: zfs
       loop: '{{ zfs | dict2items }}'
-      become: true
 
     - set_fact:
         restic_cmd: 'RESTIC_PASSWORD={{ restic.pass }} B2_ACCOUNT_ID={{ b2.account_id }} B2_ACCOUNT_KEY={{ b2.account_key }} {{ restic.path }} -r b2:{{ bucket }}'
@@ -60,7 +58,6 @@
     - name: Backup {{ service }}
       shell: '{{ restic_cmd }} backup /mnt/{{ bucket }}'
       register: output
-      become: true
 
     - debug: var=output.stdout_lines
 
@@ -86,6 +83,6 @@
         path: '/mnt/{{ bucket }}/{{ item.key }}'
         state: unmounted
       loop: '{{ zfs | dict2items }}'
-      become: true
 
   delegate_to: "{{ groups['nas'][0] }}"
+  become: true
