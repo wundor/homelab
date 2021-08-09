@@ -1,0 +1,7 @@
+---
+version: latest
+dns:
+  fe: speed.{{ lan }}
+exposed_port: 80
+zfs:
+  app: speedtest

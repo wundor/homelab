@@ -25,6 +25,7 @@
     - authelia
     - rss_my_ass
     - monitoring
+    - speedtest
 
 - hosts: wan
   roles:

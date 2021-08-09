@@ -1,0 +1,27 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: henrywhitaker3/speedtest-tracker:{{ version }}
+    environment:
+      - OOKLA_EULA_GDPR=true
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_config
+        target: /config
+    deploy:
+      {{ placement }}
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+
+volumes:
+  {{ service }}_config:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ zfs.app }}'
+
+networks:
+  {{ traefik_network }}:
+    external: true
