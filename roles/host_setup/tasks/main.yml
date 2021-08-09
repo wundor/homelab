@@ -6,3 +6,7 @@
 - name: Set up users
   import_tasks: users.yml
   tags: users
+
+- name: Install docker
+  import_tasks: docker.yml
+  tags: docker

@@ -5,3 +5,4 @@
 
 - name: Set up static DHCP leases
   import_tasks: dhcp.yml
+  tags: dhcp

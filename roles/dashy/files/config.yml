@@ -66,6 +66,9 @@ sections:
       - title: 'Authelia'
         icon: 'https://opencollective-production.s3.us-west-1.amazonaws.com/bf936590-3aae-11ea-a944-d5e45fdc60ab.png'
         url: 'https://auth.lan.testchamber.one/'
+      - title: 'Speedtest'
+        icon: 'https://img.icons8.com/material/452/ookla-speedtest.png'
+        url: 'https://speed.lan.testchamber.one/'
         # statusCheck: false
   - name: 'SYNC'
     items:
@@ -103,6 +106,9 @@ sections:
       - title: 'Nextcloud'
         icon: 'https://upload.wikimedia.org/wikipedia/commons/6/60/Nextcloud_Logo.svg'
         url: 'https://cloud.testchamber.one/'
+      - title: 'STORJ'
+        icon: 'https://cryptologos.cc/logos/storj-storj-logo.png'
+        url: 'http://storj.lan.testchamber.one:14002/'
   - name: 'TTRPG'
     items:
       - title: 'RPG Basement'

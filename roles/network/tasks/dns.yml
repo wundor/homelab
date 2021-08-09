@@ -22,6 +22,17 @@
         account_api_key: '{{ cf_api_token }}'
       run_once: true
 
+    - name: Create A record for storj
+      cloudflare_dns:
+        zone: '{{ domain }}'
+        record: 'storj'
+        type: A
+        proxied: false
+        value: '{{ public_ip }}'
+        account_email: cloudflare@{{ domain }}
+        account_api_key: '{{ cf_api_token }}'
+      run_once: true
+
     - name: Create A records for internal hosts
       cloudflare_dns:
         zone: '{{ domain }}'

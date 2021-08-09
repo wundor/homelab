@@ -1,4 +1,9 @@
 ---
+- hosts: all
+  gather_facts: false
+  roles:
+    - network
+
 - hosts: managed_hosts
   roles:
     - host_setup
