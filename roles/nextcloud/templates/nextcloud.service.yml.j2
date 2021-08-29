@@ -48,12 +48,6 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost/cron.php']
     volumes:
       {{ volume_nocopy }}
-        source: my_data
-        target: /mnt/files
-      {{ volume_nocopy }}
-        source: my_photos
-        target: /mnt/photos
-      {{ volume_nocopy }}
         source: my_archive
         target: /mnt/archive
       {{ volume_nocopy }}
@@ -86,12 +80,6 @@ networks:
     external: true
 
 volumes:
-  my_data:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/files'
-  my_photos:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/photos'
   my_archive:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/archive'

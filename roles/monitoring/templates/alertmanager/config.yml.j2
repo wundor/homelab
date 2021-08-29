@@ -5,8 +5,9 @@ global:
   slack_api_url: '{{ alertmanager.discord_webhook }}'
 
 route:
-  receiver: discord_webhook
-  group_by: [alertname]
+  - match:
+      severity: page
+    receiver: discord_webhook
 {% raw %}
 receivers:
 - name: 'discord_webhook'

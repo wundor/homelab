@@ -15,3 +15,10 @@
           66373230383436353335373436303832633163616161356539613563333133656363306261653733
           363230313331386364623863396238653237
   tags: nextcloud
+
+- hosts: docker
+  tasks:
+    - import_role:
+        name: maintenance
+        tasks_from: docker_prune
+  tags: docker_prune

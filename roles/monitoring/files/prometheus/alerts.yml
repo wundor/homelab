@@ -133,7 +133,7 @@ groups:
 
   # exactly 100 can be seen in VMs
   - alert: HostPhysicalComponentTooHot
-    expr: node_hwmon_temp_celsius > 70 and node_hwmon_temp_celsius != 100
+    expr: node_hwmon_temp_celsius > 80 and node_hwmon_temp_celsius != 100
     for: 10m
     labels:
       severity: page
