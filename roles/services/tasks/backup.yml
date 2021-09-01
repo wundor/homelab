@@ -1,11 +1,15 @@
 ---
+- set_fact:
+    shutdown_service: true
+  when: "shutdown_service is not defined"
+
 - name: Remove {{ service }} stack
   docker_stack:
     name: '{{ service }}'
     state: absent
   delegate_to: "{{ groups['edge'][0] }}"
   become: true
-  when: "'jenkins' is not in service"
+  when: "shutdown_service|bool == true"
 
 - set_fact:
     time: '{{ ansible_date_time.iso8601_basic_short }}'
@@ -13,7 +17,7 @@
 - name: Pause for stack removal
   pause:
     seconds: 30
-  when: "'jenkins' is not in service"
+  when: "shutdown_service|bool == true"
 
 - name: Create ZFS snapshots
   zfs:
@@ -27,7 +31,7 @@
 - import_role:
     name: services
     tasks_from: uplift
-  when: "'jenkins' is not in service"
+  when: "shutdown_service|bool == true"
 
 - import_role:
     name: backup

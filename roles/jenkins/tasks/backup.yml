@@ -5,3 +5,5 @@
 - import_role:
     name: services
     tasks_from: backup
+  vars:
+    shutdown_service: false
