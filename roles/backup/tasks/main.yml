@@ -44,6 +44,7 @@
         path: '/mnt/{{ bucket }}/{{ item.key }}'
         state: mounted
         fstype: zfs
+        boot: false
       loop: '{{ zfs | dict2items }}'
 
     - set_fact:
@@ -82,6 +83,7 @@
       mount:
         path: '/mnt/{{ bucket }}/{{ item.key }}'
         state: unmounted
+        boot: false
       loop: '{{ zfs | dict2items }}'
 
   delegate_to: "{{ groups['nas'][0] }}"
