@@ -13,9 +13,6 @@ services:
       {{ volume_nocopy }}
         source: {{ service }}_content
         target: /mnt/content
-      {{ volume_nocopy }}
-        source: {{ service }}_archive
-        target: /mnt/archive
     deploy:
       {{ placement }}
       labels:
@@ -32,9 +29,6 @@ volumes:
   {{ service }}_content:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/content'
-  {{ service }}_archive:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/archive'
 
 networks:
   {{ traefik_network }}:
