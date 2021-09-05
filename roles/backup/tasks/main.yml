@@ -43,6 +43,7 @@
         src: '{{ zfs_pool }}/{{ item.value }}@backup-{{ time }}'
         path: '/mnt/{{ bucket }}/{{ item.key }}'
         state: mounted
+        fstab: /tmp/tmp.fstab # fake fstab
         fstype: zfs
         boot: false
       loop: '{{ zfs | dict2items }}'
