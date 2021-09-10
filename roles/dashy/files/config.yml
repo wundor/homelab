@@ -106,9 +106,6 @@ sections:
       - title: 'Nextcloud'
         icon: 'https://upload.wikimedia.org/wikipedia/commons/6/60/Nextcloud_Logo.svg'
         url: 'https://cloud.testchamber.one/'
-      - title: 'STORJ'
-        icon: 'https://cryptologos.cc/logos/storj-storj-logo.png'
-        url: 'http://storj.lan.testchamber.one:14002/'
   - name: 'TTRPG'
     items:
       - title: 'RPG Basement'

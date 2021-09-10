@@ -5,15 +5,19 @@ global:
   slack_api_url: '{{ alertmanager.discord_webhook }}'
 
 route:
-  receiver: 'default-receiver'
+  receiver: 'null'
   routes:
+  - match:
+      severity: warning
+    receiver: null
   - match:
       severity: page
     receiver: discord_webhook
 {% raw %}
 receivers:
-- name: 'default-receiver'
+- name: 'null'
 - name: 'discord_webhook'
   webhook_configs:
   - url: http://discord:9094
+    send_resolved: true
 {% endraw %}
