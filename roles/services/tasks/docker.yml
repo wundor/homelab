@@ -32,20 +32,20 @@
           scope: edge
       when: "'edge' in group_names"
 
-    - name: Set lan node label
+    - name: Set compute node label
       docker_node:
         hostname: '{{ inventory_hostname }}'
         labels:
-          scope: lan
+          scope: compute
       delegate_to: "{{ groups['edge'][0] }}"
-      when: "'lan' in group_names"
+      when: "'compute' in group_names"
 
-    - name: Set wan node label
+    - name: Set db node label
       docker_node:
         hostname: '{{ inventory_hostname }}'
         labels:
-          scope: wan
+          scope: db
       delegate_to: "{{ groups['edge'][0] }}"
-      when: "'wan' in group_names"
+      when: "'db' in group_names"
 
   become: true

@@ -1,12 +1,12 @@
 ---
-version: '21'
+version: '22.1.1'
 dns: 
   fe: cloud.{{ domain }}
 exposed_port: 80
 zfs:
   app: nextcloud/app
   data: nextcloud/data
-  db: nextcloud/db
+  mysql_dump: nextcloud/mysql_dump
 healthcheck_url: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   37393662633465346366613735636634316237333330666132363261643638663039383036613863

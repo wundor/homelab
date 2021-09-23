@@ -85,3 +85,4 @@
         name: services
         tasks_from: uplift
   tags: monitoring
+  run_once: true

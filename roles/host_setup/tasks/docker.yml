@@ -1,5 +1,9 @@
 ---
 - block:
+    - name: Set correct hostname
+      hostname:
+        name: '{{ inventory_hostname }}'
+
     - name: Install packages
       apt:
         name: '{{ item }}'
@@ -50,8 +54,8 @@
           'experimental': true
 
     - name: Write daemon.json
-      copy: 
-        content: "{{ daemon_json | to_nice_json }}" 
+      copy:
+        content: '{{ daemon_json | to_nice_json }}'
         dest: /etc/docker/daemon.json
       register: new_config
 

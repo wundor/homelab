@@ -30,3 +30,4 @@
       become: true
 
   delegate_to: "{{ groups['edge'][0] }}"
+  run_once: true

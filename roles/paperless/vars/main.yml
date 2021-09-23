@@ -5,8 +5,9 @@ dns:
 exposed_port: 8000
 zfs:
   app: paperless/app
-  db: paperless/db
+  # db: paperless/db
   docs: paperless/docs
+  postgres_dump: paperless/postgres_dump
 healthcheck_url: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   61356439633766363732616133663739363632303738653538666166396630613838366431663064

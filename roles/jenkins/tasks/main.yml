@@ -38,12 +38,12 @@
         password: '{{ registry.pass }}'
         reauthorize: yes
 
-    - name: Pull my custom image
-      docker_image:
-        name: '{{ registry.url }}/jenkins'
-        tag: '{{ version }}'
-        source: pull
-        force_source: true
+    # - name: Pull my custom image
+    #   docker_image:
+    #     name: '{{ registry.url }}/jenkins'
+    #     tag: '{{ version }}'
+    #     source: pull
+    #     force_source: true
 
     - import_role:
         name: services

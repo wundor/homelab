@@ -8,6 +8,8 @@ services:
       test: ['CMD', 'redis-cli', 'ping']
     deploy:
       {{ placement }}
+    networks:
+      - default
 
   gotenberg:
     image: thecodingmachine/gotenberg:6
@@ -15,26 +17,37 @@ services:
       DISABLE_GOOGLE_CHROME: 1
     deploy:
       {{ placement }}
+    networks:
+      - default
 
   tika:
     image: apache/tika
     deploy:
       {{ placement }}
+    networks:
+      - default
 
   db:
     image: postgres:13
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_db
+      - type: volume
+        source: {{ service }}_postgres
         target: /var/lib/postgresql/data
+      {{ volume_nocopy }}
+        source: {{ service }}_postgres_dump
+        target: /dump
+    networks:
+      - default
     environment:
       POSTGRES_DB: {{ service }}
       POSTGRES_USER: {{ service }}
       POSTGRES_PASSWORD: {{ db_pass }}
     deploy:
-      {{ placement }}
+      placement:
+        constraints:
+          - node.labels.scope==db
 
   {{ service }}:
     image: jonaswinkler/paperless-ng:{{ version }}
@@ -71,6 +84,7 @@ services:
         {{ traefik_default_labels }}
 
 volumes:
+  {{ service }}_postgres:
 {% for (key,value) in zfs.items() %}
   {{ service }}_{{ key }}:
     {{ nfs_volume }}

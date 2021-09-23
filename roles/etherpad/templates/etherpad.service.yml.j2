@@ -1,5 +1,5 @@
----
 {{ ansible_managed | comment }}
+---
 version: "{{ compose_version }}"
 services:
   {{ service }}:
@@ -14,7 +14,7 @@ services:
       - 'TITLE=Test Chamber One Pad'
       - DB_TYPE=postgres
       - PORT={{ exposed_port }}
-      - DB_HOST=db
+      - DB_HOST=postgres
       - DB_NAME={{ service }}
       - NODE_ENV=production
       - DB_USER={{ service }}
@@ -24,12 +24,13 @@ services:
       - ETHERPAD_PLUGINS='ep_comments_page ep_cursor_trace'
     networks:
       - {{ traefik_network }}
+      - default
     deploy:
       {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
-  db:
+  postgres:
     image: postgres:9.6-alpine
     healthcheck:
       test: ['CMD', 'pg_isready', '-U', 'etherpad']
@@ -38,21 +39,26 @@ services:
       - POSTGRES_USER={{ service }}
       - POSTGRES_PASSWORD={{ db_pass }}
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_db
+      - type: volume
+        source: {{ service }}_postgres
         target: /var/lib/postgresql/data
+      {{ volume_nocopy }}
+        source: {{ service }}_postgres_dump
+        target: /dump
     networks:
-      - {{ traefik_network }}
+      - default
     deploy:
-      {{ placement }}
+      placement:
+        constraints:
+          - node.labels.scope==db
 
 volumes:
-  {{ service }}_app:
+  {{ service }}_postgres:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/app'
-  {{ service }}_db:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}/db'
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}
 
 networks:
   {{ traefik_network }}:

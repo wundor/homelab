@@ -11,7 +11,7 @@
     - traefik
     - portainer
 
-- hosts: lan
+- hosts: worker
   roles:
     - dashy
     - gatus
@@ -26,9 +26,6 @@
     - rss_my_ass
     - monitoring
     - speedtest
-
-- hosts: wan
-  roles:
     - kanboard
     - etherpad
     - ttrss

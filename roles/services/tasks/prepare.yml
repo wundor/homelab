@@ -20,6 +20,7 @@
   loop: '{{ zfs | dict2items }}'
   when: zfs is defined
   become: true
+  run_once: true
   delegate_to: "{{ groups['nas'][0] }}"
 
 - name: Create A records for {{ service }}
@@ -33,4 +34,5 @@
     account_api_key: '{{ cf_api_token }}'
   loop: '{{ dns | dict2items }}'
   when: "lan not in item.value and domain in item.value"
+  run_once: true
   delegate_to: localhost

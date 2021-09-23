@@ -1,5 +1,5 @@
----
 {{ ansible_managed | comment }}
+---
 version: '{{ compose_version }}'
 services:
   {{ service }}:
@@ -20,6 +20,8 @@ services:
 
   mercury: # set Mercury Parser API endpoint to `service.mercury:3000` on TTRSS plugin setting page
     image: wangqiru/mercury-parser-api:latest
+    networks:
+      - default
     deploy:
       {{ placement }}
 
@@ -28,14 +30,22 @@ services:
     environment:
       - POSTGRES_PASSWORD={{ db_pass }}
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_db
+      - type: volume
+        source: {{ service }}_postgres
         target: /var/lib/postgresql/data
+      {{ volume_nocopy }}
+        source: {{ service }}_postgres_dump
+        target: /dump
+    networks:
+      - default
     deploy:
-      {{ placement }}
+      placement:
+        constraints:
+          - node.labels.scope==db
 
 volumes:
   feed_icons:
+  {{ service }}_postgres:
 {% for (key,value) in zfs.items() %}
   {{ service }}_{{ key }}:
     {{ nfs_volume }}

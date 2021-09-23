@@ -6,6 +6,8 @@ services:
     image: redis:6
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
+    networks:
+      - default
     deploy:
       {{ placement }}
 
@@ -20,32 +22,25 @@ services:
       - MYSQL_DATABASE={{ service }}
       - MYSQL_USER={{ service }}
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_db
+      - type: volume
+        source: {{ service }}_mysql
         target: /var/lib/mysql
+      {{ volume_nocopy }}
+        source: {{ service }}_mysql_dump
+        target: /dump
+    networks:
+      - default
     deploy:
-      {{ placement }}
+      placement:
+        constraints:
+          - node.labels.scope==db
       rollback_config:
         order: stop-first
-{#
-  cron:
-    image: nextcloud:{{ version }}
-    volumes:
-      {{ volume_nocopy }}
-        source: {{ service}}_app
-        target: /var/www/html
-      {{ volume_nocopy }}
-        source: {{ service}}_data
-        target: /mnt/nextcloud
-    entrypoint: /cron.sh
-    deploy:
-      {{ placement }}
-#}
 
   {{ service }}:
     image: nextcloud:{{ version }}
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost/cron.php']
+    # healthcheck:
+      # test: ['CMD', 'curl', '-f', 'http://localhost/cron.php']
     volumes:
       {{ volume_nocopy }}
         source: my_archive
@@ -80,6 +75,7 @@ networks:
     external: true
 
 volumes:
+  {{ service }}_mysql:
   my_archive:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/archive'

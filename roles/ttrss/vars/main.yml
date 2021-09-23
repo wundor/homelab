@@ -4,7 +4,7 @@ dns:
   fe: rss.{{ domain }}
 exposed_port: 80
 zfs:
-  db: ttrss/db
+  postgres_dump: ttrss/postgres_dump
 healthcheck_url: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   64353435663236333365306634343066653639663166373762643930616438633864393337316336
