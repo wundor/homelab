@@ -8,4 +8,5 @@ NODE_ID=$(docker inspect --format '{{ .NodeID }}' $TASK_ID)
 CONTAINER_ID=$(docker inspect --format '{{ .Status.ContainerStatus.ContainerID }}' $TASK_ID)
 NODE_HOST=$(docker node inspect --format '{{ .Description.Hostname }}' $NODE_ID)
 export DOCKER_HOST="ssh://ci@$NODE_HOST"
+echo "executing on $NODE_HOST"
 docker exec -it $EXEC_FLAGS $CONTAINER_ID "$@"

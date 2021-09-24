@@ -1,5 +1,5 @@
 ---
-- hosts: worker
+- hosts: edge
   tasks:
     - import_role:
         name: nextcloud
