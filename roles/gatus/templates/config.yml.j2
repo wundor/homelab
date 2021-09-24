@@ -66,10 +66,12 @@ services:
     group: lan
     url: 'https://paper.{{ lan }}'
     {{ default_check }}
+{#
   - name: qBittorrent
     group: lan
     url: 'https://p2p.{{ lan }}'
     {{ default_check }}
+#}
   - name: Jellyfin
     group: lan
     url: 'https://theatre.{{ lan }}'
