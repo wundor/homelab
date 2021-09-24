@@ -1,5 +1,5 @@
 ---
-version: release
+version: latest
 dns: 
   fe: p2p.{{ lan }}
 exposed_port: 8080
