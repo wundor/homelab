@@ -47,6 +47,30 @@
         groups: docker
         append: yes
 
+    - name: Adding ci user to docker group
+      user:
+        name: 'ci'
+        groups: docker
+        append: yes
+
+    - name: Distribute ssh private keys for worker connection
+      copy:
+        src: files/ci
+        dest: /home/ci/.ssh/id_ecdsa
+        owner: ci
+        group: ci
+        mode: '0600'
+      when: "'edge' in group_names"
+
+    - name: Place swarm exec script on manager node
+      copy:
+        src: files/swarm-exec.sh
+        dest: /opt/homelab/swarm-exec.sh
+        owner: ci
+        group: ci
+        mode: '0755'
+      when: "'edge' in group_names"
+
     - name: Create docker daemon.json
       set_fact:
         daemon_json:

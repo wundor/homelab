@@ -1,20 +1,21 @@
 ---
-- name: Generate previews
-  shell: |
-    {% raw %}docker exec -u 33 $(docker ps --filter="name=nextcloud_nextcloud" --format='{{.Names}}') sh -c "./occ preview:pre-generate"{% endraw %}
-  become: true
-  register: output
+- block:
+    - name: Generate previews
+      shell: |
+        {% raw %}EXEC_FLAGS="-u 33" /opt/homelab/swarm-exec.sh nextcloud_nextcloud ./occ preview:pre-generate{% endraw %}
+      become: true
+      register: output
 
-- debug: var=output.stdout_lines
+    - debug: var=output.stdout_lines
 
-- name: Rescan storage
-  shell: |
-    {% raw %}docker exec -u 33 $(docker ps --filter='name=nextcloud_nextcloud' --format='{{.Names}}') sh -c "./occ files:scan --all"{% endraw %}
-  become: true
-  register: output
+    - name: Rescan storage
+      shell: |
+        {% raw %}EXEC_FLAGS="-u 33" /opt/homelab/swarm-exec.sh nextcloud_nextcloud ./occ files:scan --all{% endraw %}
+      become: true
+      register: output
 
-- debug: var=output.stdout_lines
+    - debug: var=output.stdout_lines
 
-- name: Healthcheck
-  uri:
-    url: '{{ healthcheck_url }}'
+    - name: Healthcheck
+      uri:
+        url: '{{ healthcheck_url }}'
