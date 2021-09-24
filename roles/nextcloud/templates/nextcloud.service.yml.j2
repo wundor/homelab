@@ -37,6 +37,21 @@ services:
       rollback_config:
         order: stop-first
 
+  cron:
+    image: nextcloud:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service}}_app
+        target: /var/www/html
+      {{ volume_nocopy }}
+        source: {{ service}}_data
+        target: /mnt/nextcloud
+    entrypoint: /cron.sh
+    networks:
+     - default
+    deploy:
+      {{ placement }}
+
   {{ service }}:
     image: nextcloud:{{ version }}
     # healthcheck:
