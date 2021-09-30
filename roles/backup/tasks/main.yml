@@ -57,8 +57,20 @@
 
     - debug: var=output.stdout_lines
 
+    - name: Unlock {{ backup }} repo
+      shell: '{{ restic_cmd }} unlock'
+      register: output
+
+    - debug: var=output.stdout_lines
+
     - name: Backup {{ service }}
       shell: '{{ restic_cmd }} backup /mnt/{{ bucket }}'
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Unlock {{ backup }} repo
+      shell: '{{ restic_cmd }} unlock'
       register: output
 
     - debug: var=output.stdout_lines
