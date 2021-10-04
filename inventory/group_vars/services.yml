@@ -16,7 +16,7 @@ traefik_default_labels: |-
           - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns.fe }}`)'
           - 'traefik.http.routers.{{ service }}.tls=true'
           - 'traefik.http.routers.{{ service }}.entrypoints=https'
-          {% if 'lan' in group_names %}- 'traefik.http.routers.{{ service }}.middlewares=lan-whitelist'{% endif %}
+          {% if 'lan' in dns.fe %}- 'traefik.http.routers.{{ service }}.middlewares=lan-whitelist'{% endif %}
 
           - 'traefik.http.services.{{ service }}.loadbalancer.server.port={{ exposed_port }}'
 
