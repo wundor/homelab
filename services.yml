@@ -32,6 +32,7 @@
     - nextcloud
     - rpgbasement
     - rss_bridge
+    - grocy
 
 - hosts: docker
   tasks:

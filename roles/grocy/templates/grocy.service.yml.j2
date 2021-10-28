@@ -1,0 +1,37 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  {{ service }}:
+    image: lscr.io/linuxserver/grocy:{{ version }}
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - type: volume
+        source: {{ service }}_data
+        target: /config
+      {{ volume_nocopy }}
+        source: {{ service }}_data_dump
+        target: /dump
+    deploy:
+      placement:
+        constraints:
+          - node.labels.scope==db # grocy uses sqlite
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+
+networks:
+  {{ traefik_network }}:
+    external: true
+
+volumes:
+  {{ service }}_data:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

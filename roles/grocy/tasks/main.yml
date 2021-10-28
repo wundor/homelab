@@ -1,0 +1,13 @@
+---
+- block:
+    - set_fact:
+        service: '{{ role_name }}'
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: grocy

@@ -1,0 +1,18 @@
+---
+- set_fact:
+    service: '{{ role_name }}'
+
+- name: Shutdown main {{ service }} service
+  shell: "docker service rm {{ service }}_{{ service }}"
+
+- name: Pause for service removal
+  pause:
+    seconds: 30
+
+- name: Dump data
+  shell: "docker exec $(docker ps -q --filter 'name={{ service }}_{{ service }}') sh -c 'cp -a /config/* /dump/.'"
+  delegate_to: "{{ groups['db'][0] }}"
+
+- import_role:
+    name: services
+    tasks_from: backup
