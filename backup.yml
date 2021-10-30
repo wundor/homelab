@@ -23,6 +23,13 @@
 - hosts: edge
   tasks:
     - import_role:
+        name: tandoor
+        tasks_from: backup
+  tags: tandoor
+
+- hosts: edge
+  tasks:
+    - import_role:
         name: kanboard
         tasks_from: backup
   tags: kanboard

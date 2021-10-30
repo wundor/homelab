@@ -11,3 +11,4 @@ zfs:
 
 secret_key: '{{ vault_secret_key }}'
 db_pass: '{{ vault_db_pass }}'
+healthcheck_url: '{{ vault_healthcheck_url }}'
