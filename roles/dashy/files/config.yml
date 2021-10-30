@@ -92,9 +92,9 @@ sections:
       - title: 'Youtube-dl'
         icon: 'https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/youtube-dl-icon.png'
         url: 'https://ss.lan.testchamber.one/'
-      - title: 'Grocy'
-        icon: 'https://cdn-icons-png.flaticon.com/512/1261/1261163.png'
-        url: 'https://erp.lan.testchamber.one/'
+      - title: 'Meals'
+        icon: 'https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/logo_color.svg'
+        url: 'https://meal.lan.testchamber.one/'
   - name: 'EXTERNAL'
     items:
       - title: 'TTRSS'

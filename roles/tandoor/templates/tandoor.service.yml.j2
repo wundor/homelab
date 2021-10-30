@@ -1,0 +1,74 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  db:
+    image: postgres:11-alpine
+    env_file: {{ service_path }}/.env
+    volumes:
+      - type: volume
+        source: {{ service }}_psql
+        target: /var/lib/postgresql/data
+      {{ volume_nocopy }}
+        source: {{ service }}_psql_dump
+        target: /dump
+    networks:
+      - default
+    deploy:
+      placement:
+        constraints:
+          - node.labels.scope==db
+      rollback_config:
+        order: stop-first
+
+  {{ service }}:
+    image: vabene1111/recipes:{{ version }}
+    env_file: {{ service_path }}/.env
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_staticfiles
+        target: /opt/recipes/staticfiles
+      {{ volume_nocopy }}
+        source: {{ service }}_nginx_config
+        target: /opt/recipes/nginx/conf.d
+      {{ volume_nocopy }}
+        source: {{ service }}_mediafiles
+        target: /opt/recipes/mediafiles
+    networks:
+      - default
+    deploy:
+      {{ placement }}
+
+  nginx:
+    image: nginx:mainline-alpine
+    env_file: {{ service_path }}/.env
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_staticfiles
+        target: /static
+      {{ volume_nocopy }}
+        source: {{ service }}_nginx_config
+        target: /etc/nginx/conf.d
+        read_only: true
+      {{ volume_nocopy }}
+        source: {{ service }}_mediafiles
+        target: /media
+    networks:
+      - {{ traefik_network }}
+      - default
+    deploy:
+      {{ placement }}
+      labels:
+        {{ traefik_default_labels }}
+
+networks:
+  {{ traefik_network }}:
+    external: true
+
+volumes:
+  {{ service }}_psql:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

@@ -1,0 +1,33 @@
+---
+- block:
+    - set_fact:
+        service: '{{ role_name }}'
+
+    - name: Include vault
+      include_vars: vault.yml
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - name: Generate env
+      template:
+        src: '.env.j2'
+        dest: '{{ service_path }}/.env'
+      delegate_to: "{{ groups['edge'][0] }}"
+      run_once: true
+      notify:
+        - restart_main_service
+
+    - name: Generate nginx config
+      template:
+        src: 'nginx.conf.j2'
+        dest: '/{{ zfs_pool }}/{{ zfs.nginx_config }}/nginx.conf'
+      delegate_to: "{{ groups['nas'][0] }}"
+      become: true
+      run_once: true
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: tandoor

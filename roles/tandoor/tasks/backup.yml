@@ -10,7 +10,7 @@
     seconds: 30
 
 - name: Dump data
-  shell: "docker exec $(docker ps -q --filter 'name={{ service }}_{{ service }}') sh -c 'cp -a /config/* /dump/.'"
+  shell: "docker exec $(docker ps -q --filter 'name={{ service }}_db') sh -c 'pg_dump -U djangouser -Fc djangodb > /dump/{{ service }}.dump'"
   delegate_to: "{{ groups['db'][0] }}"
 
 - import_role:
