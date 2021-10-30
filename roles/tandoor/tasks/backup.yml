@@ -2,8 +2,11 @@
 - set_fact:
     service: '{{ role_name }}'
 
+- name: Include vault
+  include_vars: vault.yml
+
 - name: Shutdown main {{ service }} service
-  shell: "docker service rm {{ service }}_{{ service }}"
+  shell: 'docker service rm {{ service }}_{{ service }}'
 
 - name: Pause for service removal
   pause:
