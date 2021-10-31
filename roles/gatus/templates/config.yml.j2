@@ -76,6 +76,10 @@ services:
     group: lan
     url: 'https://theatre.{{ lan }}'
     {{ default_check }}
+  - name: Tandoor
+    group: lan
+    url: 'https://meal.{{ lan }}'
+    {{ default_check }}
   - name: youtube-dl
     group: lan
     url: 'https://ss.{{ lan }}'
