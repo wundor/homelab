@@ -59,7 +59,7 @@ sections:
         url: 'https://ping.lan.testchamber.one/'
       - title: 'Jenkins'
         icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Jenkins_logo.svg'
-        url: 'https://ci.lan.testchamber.one/login'
+        url: 'https://ci.lan.testchamber.one'
       - title: 'Traefik'
         icon: 'https://traefik.io/static/traefik-proxy-logo--white-82153be41e0ce620a921b4bce974f6d8.svg'
         url: 'https://t.lan.testchamber.one/'
