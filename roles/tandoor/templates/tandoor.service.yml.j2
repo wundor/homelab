@@ -42,6 +42,8 @@ services:
   nginx:
     image: nginx:mainline-alpine
     env_file: {{ service_path }}/.env
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost']
     volumes:
       {{ volume_nocopy }}
         source: {{ service }}_staticfiles
