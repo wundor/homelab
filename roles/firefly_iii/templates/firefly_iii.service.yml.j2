@@ -29,7 +29,7 @@ services:
 
   cron:
     image: alpine
-    command: sh -c "echo \"0 3 * * * wget -qO- http://{{ service }}/api/v1/cron/{{ cron_token }}\" | crontab - && crond -f -L /dev/stdout"
+    command: sh -c "echo \"0 3 * * * wget -qO- http://{{ service }}:{{ exposed_port }}/api/v1/cron/{{ cron_token }}\" | crontab - && crond -f -L /dev/stdout"
     networks:
      - default
     deploy:
