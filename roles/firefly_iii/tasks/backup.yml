@@ -1,0 +1,18 @@
+---
+- set_fact:
+    service: '{{ role_name }}'
+
+- name: Shutdown main {{ service }} service
+  shell: "docker service rm {{ service }}_{{ service }}"
+
+- name: Pause for service removal
+  pause:
+    seconds: 30
+
+- name: Dump mysql db
+  shell: "docker exec $(docker ps -q --filter 'name={{ service }}_db') sh -c 'mysqldump -p$MYSQL_ROOT_PASSWORD nextcloud > /dump/nextcloud.dump'"
+  delegate_to: "{{ groups['db'][0] }}"
+
+- import_role:
+    name: services
+    tasks_from: backup

@@ -1,0 +1,14 @@
+---
+version: 'version-5.6.4'
+dns: 
+  fe: money.{{ lan }}
+exposed_port: 8080
+zfs:
+  mariadb_dump: firefly_iii/mariadb_dump
+  upload: firefly_iii/upload
+
+cron_token: "{{ vault_cron_token }}"
+app_token: "{{ vault_app_token }}"
+db:
+  pass: "{{ vault_db.pass }}"
+  root_pass: "{{ vault_db.root_pass }}"

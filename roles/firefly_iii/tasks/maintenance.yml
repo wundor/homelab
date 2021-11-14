@@ -1,0 +1,16 @@
+---
+- block:
+    - name: Generate previews
+      shell: |
+        {% raw %}EXEC_FLAGS="-u 33" /opt/homelab/swarm-exec.sh nextcloud_nextcloud {% endraw %}{{ item }}
+      loop:
+        - ./occ preview:pre-generate
+        - ./occ files:scan --all
+        - ./occ files:scan-app-data
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Healthcheck
+      uri:
+        url: '{{ healthcheck_url }}'

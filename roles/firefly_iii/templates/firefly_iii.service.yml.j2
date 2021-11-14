@@ -1,0 +1,63 @@
+---
+{{ ansible_managed | comment }}
+version: '{{ compose_version }}'
+services:
+  db:
+    image: mariadb:10.7
+    healthcheck:
+      test: ['CMD', 'mysqladmin', '-p$$MYSQL_ROOT_PASSWORD', 'ping']
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ db.root_pass }}
+      - MYSQL_PASSWORD={{ db.pass }}
+      - MYSQL_DATABASE={{ service }}
+      - MYSQL_USER={{ service }}
+    volumes:
+      - type: volume
+        source: {{ service }}_mariadb
+        target: /var/lib/mysql
+      {{ volume_nocopy }}
+        source: {{ service }}_mariadb_dump
+        target: /dump
+    networks:
+      - default
+    deploy:
+      placement:
+        constraints:
+          - node.labels.scope==db
+      rollback_config:
+        order: stop-first
+
+  cron:
+    image: alpine
+    command: sh -c "echo \"0 3 * * * wget -qO- http://{{ service }}/api/v1/cron/{{ cron_token }}\" | crontab - && crond -f -L /dev/stdout"
+    networks:
+     - default
+    deploy:
+      {{ placement }}
+
+  {{ service }}:
+    image: fireflyiii/core:{{ version }}
+    volumes:
+      {{ volume_nocopy }}
+        source: {{ service }}_upload
+        target: /var/www/html/storage/upload
+    networks:
+      - {{ traefik_network }}
+      - default
+    env_file: env
+    deploy:
+      {{ placement }}
+      labels:
+        {{ traefik_default_labels }}
+
+networks:
+  {{ traefik_network }}:
+    external: true
+
+volumes:
+  {{ service }}_mariadb:
+{% for (key,value) in zfs.items() %}
+  {{ service }}_{{ key }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

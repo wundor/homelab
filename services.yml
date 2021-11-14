@@ -33,6 +33,7 @@
     - rpgbasement
     - rss_bridge
     - tandoor
+    - firefly_iii
 
 - hosts: docker
   tasks:

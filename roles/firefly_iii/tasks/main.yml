@@ -1,0 +1,26 @@
+---
+- block:
+    - set_fact:
+        service: '{{ role_name }}'
+        
+    - name: Include vault
+      include_vars: vault.yml
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - name: Generate env file
+      template:
+        src: 'env.j2'
+        dest: '{{ service_path }}/env'
+      become: true
+      run_once: true
+      delegate_to: "{{ groups['edge'][0] }}"
+      notify:
+        - restart_main_service
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: firefly_iii
