@@ -7,6 +7,7 @@ zfs:
   mariadb_dump: firefly_iii/mariadb_dump
   upload: firefly_iii/upload
 
+healthcheck_url: "{{ vault_healthcheck_url }}"
 cron_token: "{{ vault_cron_token }}"
 app_token: "{{ vault_app_token }}"
 db:
