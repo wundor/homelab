@@ -10,7 +10,7 @@
     seconds: 30
 
 - name: Dump mysql db
-  shell: "docker exec $(docker ps -q --filter 'name={{ service }}_db') sh -c 'mysqldump -p$MYSQL_ROOT_PASSWORD nextcloud > /dump/nextcloud.dump'"
+  shell: "docker exec $(docker ps -q --filter 'name={{ service }}_db') sh -c 'mysqldump -p$MYSQL_ROOT_PASSWORD firefly_iii > /dump/firefly_iii.dump'"
   delegate_to: "{{ groups['db'][0] }}"
 
 - import_role:
