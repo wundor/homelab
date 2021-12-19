@@ -95,9 +95,6 @@ sections:
       - title: 'Meals'
         icon: 'https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/logo_color.svg'
         url: 'https://meal.lan.testchamber.one/'
-      - title: 'Money'
-        icon: 'https://www.firefly-iii.org/assets/icons/023-money.png'
-        url: 'https://money.lan.testchamber.one/'
   - name: 'EXTERNAL'
     items:
       - title: 'TTRSS'

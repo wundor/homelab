@@ -26,13 +26,6 @@
         name: tandoor
         tasks_from: backup
   tags: tandoor
-  
-- hosts: edge
-  tasks:
-    - import_role:
-        name: firefly_iii
-        tasks_from: backup
-  tags: firefly_iii
 
 - hosts: edge
   tasks:
