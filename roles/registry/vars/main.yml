@@ -8,5 +8,6 @@ dns:
 exposed_port:
   fe: 80
   be: 5000
+
 zfs:
   app: registry

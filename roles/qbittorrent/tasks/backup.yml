@@ -1,0 +1,10 @@
+---
+- import_role:
+    name: backup
+    tasks_from: zfs-rsync
+  vars:
+    source_volume: '{{ service }}_app'
+    backup_dataset: '/{{ zfs_pool }}/{{ zfs.app }}'
+
+- import_role:
+    name: backup

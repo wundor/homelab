@@ -5,16 +5,18 @@ services:
   {{ service }}:
     image: ghcr.io/linuxserver/qbittorrent:{{ version }}
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_app
+      - type: volume
+        source: app
         target: /config
-      {{ volume_nocopy }}
-        source: {{ service }}_downloads
+      {{ remote_volume }}
+        source: downloads
         target: /downloads
     environment:
-      - WEBUI_PORT=8080
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - WEBUI_PORT={{ exposed_port }}
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
         - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
@@ -28,14 +30,10 @@ services:
       - {{ traefik_network }}
 
 volumes:
-  {{ service }}_downloads:
+  app:
+  downloads:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/seedbox'
-{% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ value }}'
-{% endfor %}
 
 networks:
   {{ traefik_network }}:

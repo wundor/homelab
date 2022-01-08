@@ -3,6 +3,9 @@
     - set_fact:
         service: '{{ role_name }}'
 
+    - name: Include vault
+      include_vars: vault.yml
+
     - import_role:
         name: services
         tasks_from: prepare
@@ -63,23 +66,23 @@
         src: 'grafana/dashboards'
         dest: '{{ service_path }}/grafana'
 
-    - name: Set correct rights for Grafana dataset
-      file:
-        path: '/{{ zfs_pool }}/{{ service }}/grafana'
-        state: directory
-        recurse: true
-        owner: 472
-      become: true
-      delegate_to: "{{ groups['nas'][0] }}"
+    # - name: Set correct rights for Grafana dataset
+    #   file:
+    #     path: '/{{ zfs_pool }}/{{ service }}/grafana'
+    #     state: directory
+    #     recurse: true
+    #     owner: 472
+    #   become: true
+    #   delegate_to: "{{ groups['nas'][0] }}"
 
-    - name: Set correct rights for Prometheus dataset
-      file:
-        path: '/{{ zfs_pool }}/{{ service }}/prometheus'
-        state: directory
-        recurse: true
-        owner: nobody
-      become: true
-      delegate_to: "{{ groups['nas'][0] }}"
+    # - name: Set correct rights for Prometheus dataset
+    #   file:
+    #     path: '/{{ zfs_pool }}/{{ service }}/prometheus'
+    #     state: directory
+    #     recurse: true
+    #     owner: nobody
+    #   become: true
+    #   delegate_to: "{{ groups['nas'][0] }}"
 
     - import_role:
         name: services

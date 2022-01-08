@@ -3,6 +3,9 @@
     - set_fact:
         service: '{{ role_name }}'
 
+    - name: Include vault
+      include_vars: vault.yml
+
     - import_role:
         name: services
         tasks_from: prepare

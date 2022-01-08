@@ -1,7 +1,10 @@
 ---
-version: version-10.7.6-1
-dns: 
+version: version-10.7.7-1
+dns:
   fe: theatre.{{ lan }}
 exposed_port: 8096
+
 zfs:
-  app: configs/jellyfin
+  app: jellyfin
+
+healthcheck_url: '{{ vault_healthcheck_url }}'

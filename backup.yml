@@ -1,61 +1,61 @@
 ---
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: jenkins
         tasks_from: backup
   tags: jenkins
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: paperless
         tasks_from: backup
   tags: paperless
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: nextcloud
         tasks_from: backup
   tags: nextcloud
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: tandoor
         tasks_from: backup
   tags: tandoor
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: kanboard
         tasks_from: backup
   tags: kanboard
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: etherpad
         tasks_from: backup
   tags: etherpad
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: rpgbasement
         tasks_from: backup
   tags: rpgbasement
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: ttrss
         tasks_from: backup
   tags: ttrss
 
-- hosts: edge
+- hosts: swarm
   tasks:
     - import_role:
         name: authelia

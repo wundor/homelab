@@ -7,22 +7,17 @@ services:
     # healthcheck:
     # test: ['CMD', 'curl', '-f', 'http://localhost:8080/login']
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_config
+      - type: volume
+        source: config
         target: /var/jenkins_home
-    dns:
-      - 1.1.1.1
     networks:
       - {{ traefik_network }}
 
 volumes:
-  {{ service }}_config:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ zfs.app }}'
+  config:
 
 networks:
   {{ traefik_network }}:

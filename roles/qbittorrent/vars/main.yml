@@ -1,7 +1,10 @@
 ---
-version: latest
-dns: 
+version: '14.3.9'
+dns:
   fe: p2p.{{ lan }}
 exposed_port: 8080
+
 zfs:
   app: qbittorrent
+
+healthcheck_url: '{{ vault_healthcheck_url }}'

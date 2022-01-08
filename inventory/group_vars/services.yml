@@ -1,7 +1,7 @@
 ---
 root_path: '/opt/homelab'
 compose_version: '3.8'
-traefik_network: traefik-public
+traefik_network: traefik-edge
 nfs_source: "nfsvers=4,addr={{ hostvars[groups['nas'][0]]['ansible_host'] }},nolock,soft,rw"
 
 nfs_volume: |-
@@ -20,12 +20,12 @@ traefik_default_labels: |-
 
           - 'traefik.http.services.{{ service }}.loadbalancer.server.port={{ exposed_port }}'
 
-placement: |-
-  placement:
-          constraints:
-            - node.labels.scope=={% if 'compute' in group_names %}compute{% else %}edge{% endif %}
+# placement: |-
+#   placement:
+#           constraints:
+#             - node.labels.scope=={% if 'compute' in group_names %}compute{% else %}edge{% endif %}
 
-volume_nocopy: |-
+remote_volume: |-
   - type: volume
           volume:
             nocopy: true

@@ -7,25 +7,21 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost']
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_app
+      - type: volume
+        source: app
         target: /var/www/app/data
-      {{ volume_nocopy }}
-        source: {{ service }}_plugins
+      - type: volume
+        source: plugins
         target: /var/www/app/plugins
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     networks:
       - {{ traefik_network }}
 
 volumes:
-{% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ value }}'
-{% endfor %}
+  app:
+  plugins:
 
 networks:
   {{ traefik_network }}:

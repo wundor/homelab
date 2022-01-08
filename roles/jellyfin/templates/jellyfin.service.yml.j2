@@ -7,14 +7,16 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8096']
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_config
+      - type: volume
+        source: config
         target: /config
-      {{ volume_nocopy }}
-        source: {{ service }}_content
+      {{ remote_volume }}
+        source: content
         target: /mnt/content
+      {{ remote_volume }}
+        source: archive
+        target: /mnt/archive
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     networks:
@@ -23,12 +25,13 @@ services:
       - 1.1.1.1
 
 volumes:
-  {{ service }}_config:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/configs/{{ service }}'
-  {{ service }}_content:
+  config:
+  content:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/content'
+  archive:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/archive'
 
 networks:
   {{ traefik_network }}:

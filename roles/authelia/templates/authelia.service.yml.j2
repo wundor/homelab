@@ -5,15 +5,12 @@ services:
   {{ service }}:
     image: authelia/authelia:{{ version }}
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_app
-        target: /config
+      - {{ service_path }}/config:/config
     networks:
       - {{ traefik_network }}
     environment:
       - TZ=Europe/Moscow
     deploy:
-      {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
@@ -31,10 +28,3 @@ services:
 networks:
   {{ traefik_network }}:
     external: true
-
-volumes:
-{% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ value }}'
-{% endfor %}

@@ -1,8 +1,18 @@
 ---
-- block:
-    - set_fact:
-        service: '{{ role_name }}'
+- set_fact:
+    service: '{{ role_name }}'
+  tags: ['ttrss', 'ttrss-backup']
 
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['ttrss', 'ttrss-backup']
+
+- import_role:
+    name: ttrss
+    tasks_from: backup
+  tags: ['never', 'ttrss-backup']
+
+- block:
     - import_role:
         name: services
         tasks_from: prepare

@@ -14,7 +14,6 @@ services:
       - {{ traefik_network }}
       - default
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
@@ -22,8 +21,6 @@ services:
     image: wangqiru/mercury-parser-api:latest
     networks:
       - default
-    deploy:
-      {{ placement }}
 
   postgres:
     image: postgres:13-alpine
@@ -31,23 +28,19 @@ services:
       - POSTGRES_PASSWORD={{ db_pass }}
     volumes:
       - type: volume
-        source: {{ service }}_postgres
+        source: postgres
         target: /var/lib/postgresql/data
-      {{ volume_nocopy }}
-        source: {{ service }}_postgres_dump
+      {{ remote_volume }}
+        source: postgres_dump
         target: /dump
     networks:
       - default
-    deploy:
-      placement:
-        constraints:
-          - node.labels.scope==db
 
 volumes:
   feed_icons:
-  {{ service }}_postgres:
+  postgres:
 {% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
+  {{ key }}:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/{{ value }}'
 {% endfor %}

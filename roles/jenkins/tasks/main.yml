@@ -1,10 +1,37 @@
 ---
 - set_fact:
     service: '{{ role_name }}'
-  tags: ['jenkins', 'jenkins-build']
+  tags: ['jenkins', 'jenkins-build', 'jenkins-backup']
+
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['jenkins', 'jenkins-build', 'jenkins-backup']
+
+- import_role:
+    name: jenkins
+    tasks_from: backup
+  tags: ['never', 'jenkins-backup']
 
 - block:
-    - name: Generate Dockerfile
+    - name: Log into my registry
+      docker_login:
+        registry_url: '{{ registry.url }}'
+        username: admin
+        password: '{{ registry.pass }}'
+        reauthorize: yes
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+
+  tags: jenkins
+
+- block:
+    - name: Copy Dockerfile
       copy:
         src: 'Dockerfile'
         dest: 'Dockerfile'
@@ -29,28 +56,3 @@
 
   delegate_to: localhost
   tags: ['never', 'jenkins-build']
-
-- block:
-    - name: Log into my registry
-      docker_login:
-        registry_url: '{{ registry.url }}'
-        username: admin
-        password: '{{ registry.pass }}'
-        reauthorize: yes
-
-    # - name: Pull my custom image
-    #   docker_image:
-    #     name: '{{ registry.url }}/jenkins'
-    #     tag: '{{ version }}'
-    #     source: pull
-    #     force_source: true
-
-    - import_role:
-        name: services
-        tasks_from: prepare
-
-    - import_role:
-        name: services
-        tasks_from: uplift
-
-  tags: jenkins

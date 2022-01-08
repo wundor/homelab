@@ -5,22 +5,20 @@ services:
   {{ service }}:
     image: registry:{{ version['be'] }}
     deploy:
-      {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
         - 'traefik.http.routers.{{ service }}-be.rule=Host(`{{ dns['be'] }}`)'
         - 'traefik.http.routers.{{ service }}-be.tls=true'
         - 'traefik.http.routers.{{ service }}-be.entrypoints=https'
-        # - 'traefik.http.routers.{{ service }}-be.middlewares=authelia@docker'
+        - 'traefik.http.routers.{{ service }}-be.middlewares=lan-whitelist'
         - 'traefik.http.services.{{ service }}-be.loadbalancer.server.port={{ exposed_port['be'] }}'
     volumes:
-      {{ volume_nocopy }}
+      {{ remote_volume }}
         source: {{ service }}_app
         target: /var/lib/registry
     networks:
       - {{ traefik_network }}
-      - {{ service }}
 
   frontend:
     image: konradkleine/docker-registry-frontend:{{ version['fe'] }}
@@ -28,7 +26,6 @@ services:
       - ENV_DOCKER_REGISTRY_HOST={{ service }}
       - ENV_DOCKER_REGISTRY_PORT={{ exposed_port['be'] }}
     deploy:
-      {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
@@ -36,10 +33,10 @@ services:
         - 'traefik.http.routers.{{ service }}-fe.tls=true'
         - 'traefik.http.routers.{{ service }}-fe.entrypoints=https'
         - 'traefik.http.routers.{{ service }}-fe.middlewares=authelia@docker'
+        - 'traefik.http.routers.{{ service }}-fe.middlewares=lan-whitelist'
         - 'traefik.http.services.{{ service }}-fe.loadbalancer.server.port={{ exposed_port['fe'] }}'
     networks:
       - {{ traefik_network }}
-      - {{ service }}
 
 volumes:
 {% for (key,value) in zfs.items() %}
@@ -51,4 +48,3 @@ volumes:
 networks:
   {{ traefik_network }}:
     external: true
-  {{ service }}:

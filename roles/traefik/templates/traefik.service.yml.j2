@@ -21,8 +21,8 @@ services:
         source: {{ service_path }}/config.yml
         target: /config.yml
         read_only: true
-      {{ volume_nocopy }}
-        source: {{ service }}_config
+      - type: bind
+        source: {{ service_path }}/certificates
         target: /certificates
     healthcheck:
       test: ['CMD', 'traefik', 'healthcheck', '--ping']
@@ -47,7 +47,6 @@ services:
       - --certificatesresolvers.wild.acme.dnschallenge.delaybeforecheck=0
       - --certificatesresolvers.wild.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
     deploy:
-      {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
@@ -63,8 +62,6 @@ services:
         - 'traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.testchamber.one, *.lan.testchamber.one'
         - 'traefik.http.routers.wildcard-certs.tls.domains[1].main=rpgbasement.xyz'
         - 'traefik.http.routers.wildcard-certs.tls.domains[1].sans=*.rpgbasement.xyz'
-        - 'traefik.http.routers.wildcard-certs.tls.domains[2].main=rss-my-ass.ga'
-        - 'traefik.http.routers.wildcard-certs.tls.domains[2].sans=*.rss-my-ass.ga'
           # dashboard
         - 'traefik.http.routers.{{ service }}.rule=Host(`{{ dns.fe }}`)'
         - 'traefik.http.routers.{{ service }}.tls=true'
@@ -74,11 +71,6 @@ services:
         - 'traefik.http.services.{{ service }}.loadbalancer.server.port=8080'
     networks:
       - {{ traefik_network }}
-
-volumes:
-  {{ service }}_config:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ service }}'
 
 networks:
   {{ traefik_network }}:

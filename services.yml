@@ -6,33 +6,31 @@
         tasks_from: docker
   tags: docker
 
-- hosts: edge
+- hosts: swarm
   roles:
     - traefik
-    - portainer
-
-- hosts: worker
-  roles:
     - dashy
     - gatus
-    - jenkins
-    - syncthing
+    - authelia
     - paperless
     - alltube
     - registry
-    - qbittorrent
-    - jellyfin
-    - authelia
-    - rss_my_ass
-    - monitoring
-    - speedtest
+    - jenkins
+    - ttrss
+    - tandoor
+    - rpgbasement
     - kanboard
     - etherpad
-    - ttrss
+    - jellyfin
     - nextcloud
-    - rpgbasement
-    - rss_bridge
-    - tandoor
+    - monitoring
+    - qbittorrent
+
+    # - syncthing
+    # - portainer
+    # - rss_my_ass
+    # - speedtest
+    # - rss_bridge
 
 - hosts: docker
   tasks:

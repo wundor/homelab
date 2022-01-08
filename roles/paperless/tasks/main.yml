@@ -1,8 +1,18 @@
 ---
-- block:
-    - set_fact:
-        service: '{{ role_name }}'
+- set_fact:
+    service: '{{ role_name }}'
+  tags: ['paperless', 'paperless-backup']
 
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['paperless', 'paperless-backup']
+
+- import_role:
+    name: paperless
+    tasks_from: backup
+  tags: ['never', 'paperless-backup']
+
+- block:
     - import_role:
         name: services
         tasks_from: prepare

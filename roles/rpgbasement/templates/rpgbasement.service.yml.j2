@@ -9,11 +9,10 @@ services:
       GHOST_CONTENT: /var/lib/ghost/content
       NODE_ENV: production
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
     volumes:
-      {{ volume_nocopy }}
+      {{ remote_volume }}
         source: {{ service }}_blog
         target: /var/lib/ghost/content
       - type: bind
@@ -28,7 +27,6 @@ services:
     environment:
       - TZ=Europe/Moscow
     deploy:
-      {{ placement }}
       labels:
         - 'traefik.enable=true'
         - 'traefik.docker.network={{ traefik_network }}'
@@ -41,7 +39,7 @@ services:
         source: {{ service_path }}/nginx.conf
         target: /etc/nginx/conf.d/default.conf
         read_only: true
-      {{ volume_nocopy }}
+      {{ remote_volume }}
         source: {{ service }}_podcast
         target: /usr/share/nginx/html/podcast
         read_only: true

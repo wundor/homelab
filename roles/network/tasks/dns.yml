@@ -22,18 +22,6 @@
         account_api_key: '{{ cf_api_token }}'
       run_once: true
 
-    - name: remove A record for storj
-      cloudflare_dns:
-        zone: '{{ domain }}'
-        record: 'storj'
-        type: A
-        proxied: false
-        value: '{{ public_ip }}'
-        state: absent
-        account_email: cloudflare@{{ domain }}
-        account_api_key: '{{ cf_api_token }}'
-      run_once: true
-
     - name: Create A records for internal hosts
       cloudflare_dns:
         zone: '{{ domain }}'
@@ -48,7 +36,7 @@
         zone: '{{ domain }}'
         record: 'lan'
         type: A
-        value: "{{ hostvars[groups['edge'][0]]['ansible_host'] }}"
+        value: "{{ hostvars[groups['swarm'][0]]['ansible_host'] }}"
         account_email: cloudflare@{{ domain }}
         account_api_key: '{{ cf_api_token }}'
       run_once: true

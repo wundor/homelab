@@ -1,9 +1,12 @@
 ---
-- set_fact:
-    service: '{{ role_name }}'
+- import_role:
+    name: backup
+    tasks_from: zfs-rsync
+  vars:
+    source_volume: '{{ service }}_config'
+    backup_dataset: '/{{ zfs_pool }}/{{ zfs.config }}'
+
+  # rsync -avz --progress --stats --delete $(docker volume inspect --format '{{ .Mountpoint }}' jenkins_config)/ {{ backup_dir }}/
 
 - import_role:
-    name: services
-    tasks_from: backup
-  vars:
-    shutdown_service: false
+    name: backup

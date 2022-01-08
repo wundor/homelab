@@ -6,8 +6,6 @@ services:
     image: redis:6
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
-    deploy:
-      {{ placement }}
     networks:
       - default
 
@@ -15,28 +13,24 @@ services:
     image: thecodingmachine/gotenberg:6
     environment:
       DISABLE_GOOGLE_CHROME: 1
-    deploy:
-      {{ placement }}
     networks:
       - default
 
   tika:
     image: apache/tika
-    deploy:
-      {{ placement }}
     networks:
       - default
 
-  db:
+  postgres:
     image: postgres:13
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
     volumes:
       - type: volume
-        source: {{ service }}_postgres
+        source: postgres
         target: /var/lib/postgresql/data
-      {{ volume_nocopy }}
-        source: {{ service }}_postgres_dump
+      {{ remote_volume }}
+        source: postgres_dump
         target: /dump
     networks:
       - default
@@ -44,27 +38,23 @@ services:
       POSTGRES_DB: {{ service }}
       POSTGRES_USER: {{ service }}
       POSTGRES_PASSWORD: {{ db_pass }}
-    deploy:
-      placement:
-        constraints:
-          - node.labels.scope==db
 
   {{ service }}:
     image: jonaswinkler/paperless-ng:{{ version }}
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000']
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_app
+      - type: volume
+        source: app
         target: /usr/src/paperless/data
-      {{ volume_nocopy }}
-        source: {{ service }}_docs
+      {{ remote_volume }}
+        source: docs
         target: /usr/src/paperless/media
     environment:
       PAPERLESS_TIKA_ENABLED: '1'
       PAPERLESS_CONSUMER_DELETE_DUPLICATES: 'true'
       PAPERLESS_SECRET_KEY: '{{ secret_key }}'
-      PAPERLESS_DBHOST: 'db'
+      PAPERLESS_DBHOST: 'postgres'
       PAPERLESS_DBNAME: '{{ service }}'
       PAPERLESS_DBUSER: '{{ service }}'
       PAPERLESS_DBPASS: '{{ db_pass }}'
@@ -79,17 +69,18 @@ services:
       - {{ traefik_network }}
       - default
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
 volumes:
-  {{ service }}_postgres:
-{% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
+  app:
+  docs:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ value }}'
-{% endfor %}
+      device: ':/{{ zfs_pool }}/{{ zfs.docs }}'
+  postgres:
+  postgres_dump:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ zfs.postgres_dump }}'
 
 networks:
   {{ traefik_network }}:

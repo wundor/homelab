@@ -11,16 +11,6 @@
     group: '{{ ansible_env.USER }}'
   become: true
 
-- name: Create {{ service }} directory on the edge
-  file:
-    path: '{{ service_path }}'
-    state: directory
-    owner: '{{ ansible_env.USER }}'
-    group: '{{ ansible_env.USER }}'
-  become: true
-  delegate_to: "{{ groups['edge'][0] }}"
-  when: service_backup is not defined
-
 - name: Create ZFS datasets for {{ service }}
   zfs:
     name: '{{ zfs_pool }}/{{ item.value }}'

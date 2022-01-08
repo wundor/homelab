@@ -1,8 +1,18 @@
 ---
-- block:
-    - set_fact:
-        service: '{{ role_name }}'
+- set_fact:
+    service: '{{ role_name }}'
+  tags: ['etherpad', 'etherpad-backup']
 
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['etherpad', 'etherpad-backup']
+
+- import_role:
+    name: etherpad
+    tasks_from: backup
+  tags: ['never', 'etherpad-backup']
+
+- block:
     - import_role:
         name: services
         tasks_from: prepare

@@ -1,8 +1,18 @@
 ---
-- block:
-    - set_fact:
-        service: '{{ role_name }}'
+- set_fact:
+    service: '{{ role_name }}'
+  tags: ['rpgbasement', 'rpgbasement-backup']
 
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['rpgbasement', 'rpgbasement-backup']
+
+- import_role:
+    name: rpgbasement
+    tasks_from: backup
+  tags: ['never', 'rpgbasement-backup']
+
+- block:
     - import_role:
         name: services
         tasks_from: prepare

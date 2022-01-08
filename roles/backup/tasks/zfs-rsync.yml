@@ -1,0 +1,30 @@
+---
+- block:
+    - name: Set destination dir
+      set_fact:
+        backup_dir: "/mnt/backup-{{ service | replace('_','-') }}"
+
+    - name: Install nfs-common
+      apt:
+        name: 'nfs-common'
+        update_cache: true
+
+    - name: Create {{ service }} backup directory
+      file:
+        path: '{{ backup_dir }}'
+        state: directory
+        owner: '{{ ansible_env.USER }}'
+        group: '{{ ansible_env.USER }}'
+
+    - name: Mount {{ service }} NFS backup dataset - {{ source_volume }}
+      shell: "mount -t nfs {{ hostvars[groups['nas'][0]]['ansible_host'] }}:{{ backup_dataset }} {{ backup_dir }}"
+
+    - name: Backup {{ service }} dataset - {{ source_volume }}
+      shell: |
+        rsync -az --delete $(docker volume inspect --format {% raw %}'{{ .Mountpoint }}'{% endraw %} {{ source_volume }})/ {{ backup_dir }}/
+
+  always:
+    - name: Unmount {{ service }} NFS backup dataset
+      shell: 'umount {{ backup_dir }}'
+
+  become: true

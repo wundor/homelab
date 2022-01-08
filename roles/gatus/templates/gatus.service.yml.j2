@@ -7,7 +7,6 @@ services:
     volumes:
       - {{ service_path }}/config.yml:/config/config.yaml
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
         - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'

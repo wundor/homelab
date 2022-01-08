@@ -1,5 +1,5 @@
 ---
-version: latest
-dns: 
+version: release-1.9.6
+dns:
   fe: hub.{{ lan }}
 exposed_port: 80

@@ -7,7 +7,7 @@ services:
     environment:
       - OOKLA_EULA_GDPR=true
     volumes:
-      {{ volume_nocopy }}
+      {{ nfs_volume }}
         source: {{ service }}_config
         target: /config
     deploy:

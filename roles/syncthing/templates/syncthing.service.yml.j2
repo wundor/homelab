@@ -5,10 +5,10 @@ services:
   {{ service }}:
     image: syncthing/syncthing:{{ version }}
     volumes:
-      {{ volume_nocopy }}
+      {{ nfs_volume }}
         source: {{ service }}_archive
         target: /mnt/archive
-      {{ volume_nocopy }}
+      {{ nfs_volume }}
         source: {{ service }}_config
         target: /var/syncthing
     deploy:

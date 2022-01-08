@@ -7,6 +7,11 @@
         name: services
         tasks_from: prepare
 
+    - name: Create certificates directory
+      file:
+        path: '{{ service_path }}/certificates'
+        state: directory
+
     - name: Copy config
       copy:
         src: 'config.yml'

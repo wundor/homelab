@@ -1,18 +1,14 @@
 ---
 - set_fact:
     time: '{{ ansible_date_time.iso8601_basic_short }}'
-  when: time is not defined
-
-- name: Create ZFS snapshots
-  zfs:
-    name: '{{ zfs_pool }}/{{ item.value }}@backup-{{ time }}'
-    state: present
-  loop: '{{ zfs | dict2items }}'
-  become: true
-  delegate_to: "{{ groups['nas'][0] }}"
-  when: service_backup is not defined
 
 - block:
+    - name: Create ZFS snapshots
+      zfs:
+        name: '{{ zfs_pool }}/{{ item.value }}@backup-{{ time }}'
+        state: present
+      loop: '{{ zfs | dict2items }}'
+
     - name: Check if restic is here
       stat:
         path: '{{ restic.path }}'
@@ -45,7 +41,6 @@
         state: mounted
         fstab: /tmp/tmp.fstab # fake fstab
         fstype: zfs
-        boot: false
       loop: '{{ zfs | dict2items }}'
 
     - set_fact:
@@ -57,7 +52,7 @@
 
     - debug: var=output.stdout_lines
 
-    - name: Unlock {{ backup }} repo
+    - name: Unlock {{ service }} repo
       shell: '{{ restic_cmd }} unlock'
       register: output
 
@@ -69,13 +64,13 @@
 
     - debug: var=output.stdout_lines
 
-    - name: Unlock {{ backup }} repo
+    - name: Unlock {{ service }} repo
       shell: '{{ restic_cmd }} unlock'
       register: output
 
     - debug: var=output.stdout_lines
 
-    - name: Prune backups for {{ service }}
+    - name: Prune old backups for {{ service }}
       shell: '{{ restic_cmd }} forget --keep-daily 1 --keep-weekly 3 --keep-monthly 6 --prune'
       register: output
 
@@ -96,7 +91,10 @@
       mount:
         path: '/mnt/{{ bucket }}/{{ item.key }}'
         state: unmounted
-        boot: false
+      loop: '{{ zfs | dict2items }}'
+
+    - name: Remove old snapshots
+      shell: 'zfs list -t snapshot -o name {{ zfs_pool}}/{{ item.value }} | grep @backup| tac | tail -n +10| xargs -n 1 zfs destroy -r'
       loop: '{{ zfs | dict2items }}'
 
   delegate_to: "{{ groups['nas'][0] }}"

@@ -1,7 +1,18 @@
 ---
+- set_fact:
+    service: '{{ role_name }}'
+  tags: ['kanboard', 'kanboard-backup']
+
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['kanboard', 'kanboard-backup']
+
+- import_role:
+    name: kanboard
+    tasks_from: backup
+  tags: ['never', 'kanboard-backup']
+
 - block:
-    - set_fact:
-        service: '{{ role_name }}'
     - import_role:
         name: services
         tasks_from: prepare

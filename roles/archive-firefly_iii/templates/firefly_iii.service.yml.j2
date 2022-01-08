@@ -15,7 +15,7 @@ services:
       - type: volume
         source: {{ service }}_mariadb
         target: /var/lib/mysql
-      {{ volume_nocopy }}
+      {{ nfs_volume }}
         source: {{ service }}_mariadb_dump
         target: /dump
     networks:
@@ -38,7 +38,7 @@ services:
   {{ service }}:
     image: fireflyiii/core:{{ version }}
     volumes:
-      {{ volume_nocopy }}
+      {{ nfs_volume }}
         source: {{ service }}_upload
         target: /var/www/html/storage/upload
     networks:

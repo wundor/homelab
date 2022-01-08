@@ -38,10 +38,6 @@ services:
     group: lan
     url: 'https://alerts.{{ lan }}'
     {{ default_check }}
-  - name: Portainer
-    group: lan
-    url: 'https://swarm.{{ lan }}'
-    {{ default_check }}
   - name: Registry
     group: lan
     url: 'https://reg.{{ lan }}'

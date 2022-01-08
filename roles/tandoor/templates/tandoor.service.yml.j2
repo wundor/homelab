@@ -7,17 +7,14 @@ services:
     env_file: {{ service_path }}/.env
     volumes:
       - type: volume
-        source: {{ service }}_psql
+        source: psql
         target: /var/lib/postgresql/data
-      {{ volume_nocopy }}
-        source: {{ service }}_psql_dump
+      {{ remote_volume }}
+        source: psql_dump
         target: /dump
     networks:
       - default
     deploy:
-      placement:
-        constraints:
-          - node.labels.scope==db
       rollback_config:
         order: stop-first
 
@@ -25,19 +22,17 @@ services:
     image: vabene1111/recipes:{{ version }}
     env_file: {{ service_path }}/.env
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_staticfiles
+      - type: bind
+        source: {{ service_path }}/nginx.conf
+        target: /opt/recipes/nginx/conf.d/default.conf
+      - type: volume
+        source: staticfiles
         target: /opt/recipes/staticfiles
-      {{ volume_nocopy }}
-        source: {{ service }}_nginx_config
-        target: /opt/recipes/nginx/conf.d
-      {{ volume_nocopy }}
-        source: {{ service }}_mediafiles
+      - type: volume
+        source: mediafiles
         target: /opt/recipes/mediafiles
     networks:
       - default
-    deploy:
-      {{ placement }}
 
   nginx:
     image: nginx:mainline-alpine
@@ -45,21 +40,20 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost']
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_staticfiles
-        target: /static
-      {{ volume_nocopy }}
-        source: {{ service }}_nginx_config
-        target: /etc/nginx/conf.d
+      - type: bind
+        source: {{ service_path }}/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
         read_only: true
-      {{ volume_nocopy }}
-        source: {{ service }}_mediafiles
+      - type: volume
+        source: staticfiles
+        target: /static
+      - type: volume
+        source: mediafiles
         target: /media
     networks:
       - {{ traefik_network }}
       - default
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
@@ -68,9 +62,9 @@ networks:
     external: true
 
 volumes:
-  {{ service }}_psql:
-{% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
+  mediafiles:
+  staticfiles:
+  psql:
+  psql_dump:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ value }}'
-{% endfor %}
+      device: ':/{{ zfs_pool }}/{{ zfs.psql_dump }}'

@@ -1,0 +1,16 @@
+---
+- name: Shutdown main {{ service }} service
+  shell: 'docker service scale {{ service }}_{{ service }}=0'
+
+- import_role:
+    name: backup
+    tasks_from: zfs-rsync
+  vars:
+    source_volume: '{{ service }}_app'
+    backup_dataset: '/{{ zfs_pool }}/{{ zfs.app }}'
+
+- name: Start main {{ service }} service
+  shell: 'docker service scale {{ service }}_{{ service }}=1'
+
+- import_role:
+    name: backup

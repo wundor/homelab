@@ -7,8 +7,8 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:{{ exposed_port }}']
     volumes:
-      {{ volume_nocopy }}
-        source: {{ service }}_app
+      - type: volume
+        source: app
         target: /opt/etherpad-lite/var
     environment:
       - 'TITLE=Test Chamber One Pad'
@@ -26,7 +26,6 @@ services:
       - {{ traefik_network }}
       - default
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
 
@@ -40,25 +39,20 @@ services:
       - POSTGRES_PASSWORD={{ db_pass }}
     volumes:
       - type: volume
-        source: {{ service }}_postgres
+        source: postgres
         target: /var/lib/postgresql/data
-      {{ volume_nocopy }}
-        source: {{ service }}_postgres_dump
+      {{ remote_volume }}
+        source: postgres_dump
         target: /dump
     networks:
       - default
-    deploy:
-      placement:
-        constraints:
-          - node.labels.scope==db
 
 volumes:
-  {{ service }}_postgres:
-{% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
+  app:
+  postgres:
+  postgres_dump:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ value }}'
-{% endfor %}
+      device: ':/{{ zfs_pool }}/{{ zfs.postgres_dump }}'
 
 networks:
   {{ traefik_network }}:
