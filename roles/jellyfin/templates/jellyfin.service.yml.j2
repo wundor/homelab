@@ -3,9 +3,13 @@
 version: '{{ compose_version }}'
 services:
   {{ service }}:
-    image: linuxserver/jellyfin:{{ version }}
+    image: lscr.io/linuxserver/jellyfin:{{ version }}
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8096']
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
     volumes:
       - type: volume
         source: config

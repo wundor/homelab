@@ -10,5 +10,6 @@ zfs:
   mysql_dump: nextcloud/mysql_dump
 
 healthcheck_url: '{{ vault_healthcheck_url }}'
+maintenance_healthcheck_url: '{{ vault_maintenance_healthcheck_url }}'
 db_root_pass: '{{ vault_db_root_pass }}'
 db_pass: '{{vault_db_pass }}'

@@ -1,4 +1,5 @@
 #!/bin/bash
+# This is useful when you have swarm cluster of several machines: simply use this on the manager node like this - ./swarm-exec.sh STACK_SERVICE COMMAND - manager node should have ssh access to all workers for this to work
 set -e
 
 SERVICE_NAME=$1; shift

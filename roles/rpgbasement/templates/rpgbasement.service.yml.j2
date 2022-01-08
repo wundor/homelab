@@ -13,7 +13,7 @@ services:
         {{ traefik_default_labels }}
     volumes:
       {{ remote_volume }}
-        source: {{ service }}_blog
+        source: blog
         target: /var/lib/ghost/content
       - type: bind
         source: {{ service_path }}/ghost-config.json
@@ -40,7 +40,7 @@ services:
         target: /etc/nginx/conf.d/default.conf
         read_only: true
       {{ remote_volume }}
-        source: {{ service }}_podcast
+        source: podcast
         target: /usr/share/nginx/html/podcast
         read_only: true
     networks:
@@ -48,7 +48,7 @@ services:
 
 volumes:
 {% for (key,value) in zfs.items() %}
-  {{ service }}_{{ key }}:
+  {{ key }}:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/{{ value }}'
 {% endfor %}

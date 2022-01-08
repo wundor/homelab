@@ -2,7 +2,7 @@
 - block:
     - name: Generate previews
       shell: |
-        {% raw %}EXEC_FLAGS="-u 33" /opt/homelab/swarm-exec.sh nextcloud_nextcloud {% endraw %}{{ item }}
+        {% raw %}docker exec -u 33 $(docker ps -q --filter "name=nextcloud_nextcloud"){% endraw %} {{ item }}
       loop:
         - ./occ preview:pre-generate
         - ./occ files:scan --all
@@ -13,4 +13,4 @@
 
     - name: Healthcheck
       uri:
-        url: '{{ healthcheck_url }}'
+        url: '{{ maintenance_healthcheck_url }}'
