@@ -4,10 +4,9 @@ dns:
   fe: meal.{{ lan }}
 exposed_port: 80
 zfs:
-  psql_dump: tandoor/psql_dump
   staticfiles: tandoor/staticfiles
-  nginx_config: tandoor/nginx_config
   mediafiles: tandoor/mediafiles
+  psql_dump: tandoor/psql_dump
 
 secret_key: '{{ vault_secret_key }}'
 db_pass: '{{ vault_db_pass }}'
