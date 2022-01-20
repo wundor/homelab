@@ -29,7 +29,7 @@
     record: '{{ item.value }}'
     type: A
     value: '{{ public_ip }}'
-    proxied: true
+    proxied: false
     account_email: cloudflare@{{ domain }}
     account_api_key: '{{ cf_api_token }}'
   loop: '{{ dns | dict2items }}'

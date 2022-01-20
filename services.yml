@@ -11,6 +11,7 @@
     - traefik
     - dashy
     - gatus
+    - cv
     - authelia
     - paperless
     - alltube

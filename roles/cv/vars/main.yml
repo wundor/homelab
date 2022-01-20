@@ -1,0 +1,4 @@
+---
+dns:
+  fe: cv.{{ domain }}
+exposed_port: 80

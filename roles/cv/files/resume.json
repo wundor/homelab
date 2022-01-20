@@ -1,0 +1,110 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Dmitry Shashkov",
+    "label": "DevOps/Site Reliability Engineer",
+    "image": "",
+    "email": "dmitry.shashkov@testchamber.one",
+    "picture": "/profile.png",
+    "location": {
+      "address": "Nizhny Novgorod"
+    },
+    "summary": "From the start as QA Automation Engineer I was focused on automating routine stuff and dealing with the infrastructure so it was natural for me to transition into DevOps field after some time.",
+    "profiles": [
+      {
+        "network": "linkedin",
+        "username": "dmitry.shashkov",
+        "url": "https://www.linkedin.com/in/dmitry-shashkov-a0b788139/"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Orion Innovation",
+      "position": "DevOps Engineer",
+      "startDate": "2017-03",
+      "endDate": "",
+      "summary": "Developing and supporting CI/CD infrastructure and assisting with migrating applications to the cloud",
+      "highlights": [
+        "Application migration from on-premises docker swarm to AWS Fargate",
+        "Creating from scratch and supporting the infrastructure of small serverless application using AWS and serverless framework",
+        "Creating and support of CI/CD infrastructure based on Jenkins and Gitlab-CI",
+        "Linux hosts administration, VMs and bare-metal",
+        "Creating Ansible playbooks for infrastructure management and application deployment",
+        "Setting up small infrastructure monitoring system with Prometheus + Grafana"
+      ]
+    },
+    {
+      "name": "MERA",
+      "position": "QA Automation Engineer",
+      "startDate": "2015-07",
+      "endDate": "2017-02",
+      "summary": "Writing and performing automated tests and dealing with corresponding infrastructure",
+      "highlights": [
+        "Creating and supporting automatic functional tests in Java",
+        "Creating and supporting automatic E2E tests in JavaScript+Protractor",
+        "Experience with network protocols: LACP, VRRP, BGP, RSTP (L2-L3 of the OSI model)",
+        "Working with traffic generators and Wireshark",
+        "Some experience working with Valgrind",
+        "Adapting test strategy due to changes in application architecture (moving to microservices)",
+        "Creating and maintaining automated e2e tests infrastructure with Selenium grid and Docker"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Vladimir state university",
+      "area": "Sociology",
+      "studyType": "Bachelor",
+      "startDate": "2010-09",
+      "endDate": "2014-07"
+    }
+  ],
+  "skills": [
+    {
+      "name": "CI/CD",
+      "level": "Master",
+      "keywords": ["Ansible", "Jenkins", "Gitlab CI", "Prometheus"]
+    },
+    {
+      "name": "Containers",
+      "level": "Advanced",
+      "keywords": ["Docker", "Swarm", "Nomad", "k8s"]
+    },
+    {
+      "name": "Scripting",
+      "level": "Advanced",
+      "keywords": ["Bash", "Python"]
+    },
+    {
+      "name": "Cloud",
+      "level": "Advanced",
+      "keywords": ["AWS CDK", "AWS Fargate", "AWS Lambda", "Serverless"]
+    },
+    {
+      "name": "Linux",
+      "level": "Advanced",
+      "keywords": ["Ubuntu", "Proxmox", "ZFS", "LVM", "Networking", "LXC"]
+    },
+    {
+      "name": "Javascript/Typescript",
+      "level": "Beginner",
+      "keywords": ["Express", "NodeJS", "NestJS"]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Russian",
+      "fluency": "Native speaker"
+    },
+    {
+      "language": "English",
+      "fluency": "Upper Intermediate"
+    }
+  ],
+  "meta": {
+    "canonical": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2017-12-24T15:53:00"
+  }
+}

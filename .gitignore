@@ -1,2 +1,8 @@
 .vault_pass
 /Dockerfile
+_site
+.jekyll-cache
+cv.*
+node_modules
+dist
+public
