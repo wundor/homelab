@@ -9,10 +9,12 @@
 - hosts: swarm
   roles:
     - traefik
+    - authelia
     - dashy
     - gatus
     - cv
-    - authelia
+    - slides
+    - blog
     - paperless
     - alltube
     - registry

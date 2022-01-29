@@ -7,19 +7,18 @@
         name: services
         tasks_from: prepare
 
-    - name: Build resume
+    - name: Build blog
       shell:
         cmd: '{{ item }}'
         chdir: '{{ role_path }}/files'
       loop:
-        - npm ci 
-        - npm run resume -- export dist/index.html --theme full
+        - docker run --rm -u 1000:1000 -v $PWD:/src klakegg/hugo
       delegate_to: localhost
 
     - name: Copy site
       # copy is really slow with directories
       ansible.posix.synchronize:
-        src: 'dist/'
+        src: 'public/'
         dest: '{{ service_path }}/site'
       notify:
         - restart_main_service
@@ -27,4 +26,4 @@
     - import_role:
         name: services
         tasks_from: uplift
-  tags: cv
+  tags: blog

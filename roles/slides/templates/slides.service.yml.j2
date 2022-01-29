@@ -1,0 +1,43 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  {{ service }}deck:
+    image: nginx
+    volumes:
+      - type: bind
+        source: {{ service_path }}/deck
+        target: /usr/share/nginx/html
+        read_only: true
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-deck.rule=Host(`{{ dns['deck'] }}`)'
+        - 'traefik.http.routers.{{ service }}-deck.tls=true'
+        - 'traefik.http.routers.{{ service }}-deck.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-deck.loadbalancer.server.port={{ exposed_port }}'
+    networks:
+      - {{ traefik_network }}
+
+  {{ service }}slides:
+    image: nginx
+    volumes:
+      - type: bind
+        source: {{ service_path }}/slides
+        target: /usr/share/nginx/html
+        read_only: true
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-slides.rule=Host(`{{ dns['slides'] }}`)'
+        - 'traefik.http.routers.{{ service }}-slides.tls=true'
+        - 'traefik.http.routers.{{ service }}-slides.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-slides.loadbalancer.server.port={{ exposed_port }}'
+    networks:
+      - {{ traefik_network }}
+
+networks:
+  {{ traefik_network }}:
+    external: true

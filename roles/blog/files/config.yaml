@@ -1,0 +1,38 @@
+baseUrl: /
+languageCode: en-us
+theme: terminal
+paginate: 10
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+params:
+  contentTypeName: posts
+  # ["orange", "blue", "red", "green", "pink"]
+  themeColor: green
+  showMenuItems: 3
+  showLanguageSelector: false
+  fullWidthTheme: false
+  centerTheme: true
+
+languages:
+  en:
+    languageName: English
+    title: Testchamber One blog
+    subtitle: WundoR stuff
+    keywords: ''
+    menuMore: Show more
+    readMore: Read more
+    readOtherPosts: Read other posts
+
+    params:
+      logo:
+        logoText: WundoR
+        logoHomeLink: /
+
+    menu:
+      main:
+      - identifier: cv
+        name: CV
+        url: https://cv.testchamber.one

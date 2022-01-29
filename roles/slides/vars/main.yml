@@ -1,0 +1,5 @@
+---
+dns:
+  deck: deck.{{ domain }}
+  slides: slides.{{ domain }}
+exposed_port: 80

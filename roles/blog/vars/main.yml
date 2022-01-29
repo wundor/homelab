@@ -1,0 +1,4 @@
+---
+dns:
+  fe: '{{ domain }}'
+exposed_port: 80

@@ -1,0 +1,49 @@
+---
+- block:
+    - set_fact:
+        service: '{{ role_name }}'
+
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - name: Build deck - version for presentation
+      shell:
+        cmd: '{{ item }}'
+        chdir: '{{ role_path }}/files'
+      loop:
+        - npm ci
+        - cp reveal-deck.json reveal.json
+        - npm run r -- ./ --static _deck --absolute-url https://{{ dns.deck }} --featured-slide 1
+      delegate_to: localhost
+
+    - name: Build slides - version for later watching
+      shell:
+        cmd: '{{ item }}'
+        chdir: '{{ role_path }}/files'
+      loop:
+        - npm ci
+        - cp reveal-slides.json reveal.json
+        - npm run r -- ./ --static _slides --absolute-url https://{{ dns.slides }} --featured-slide 1
+      delegate_to: localhost
+
+    - name: Copy deck
+      # copy is really slow with directories
+      ansible.posix.synchronize:
+        src: '_deck/'
+        dest: '{{ service_path }}/deck'
+      notify:
+        - restart_main_service
+
+    - name: Copy slides
+      # copy is really slow with directories
+      ansible.posix.synchronize:
+        src: '_slides/'
+        dest: '{{ service_path }}/slides'
+      notify:
+        - restart_main_service
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+  tags: slides
