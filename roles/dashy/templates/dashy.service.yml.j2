@@ -5,7 +5,8 @@ services:
   {{ service }}:
     image: lissy93/dashy:{{ version }}
     volumes:
-      - {{ service_path }}/config.yml:/app/public/conf.yml
+      - {{ service_path }}/config.yml:/app/public/conf.yml:ro
+      - {{ service_path }}/icons:/app/public/item-icons:ro
     healthcheck:
       test: ["CMD", "yarn", "health-check"]
       interval: 10s
