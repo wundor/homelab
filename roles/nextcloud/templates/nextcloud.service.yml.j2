@@ -73,8 +73,8 @@ services:
       - OVERWRITEHOST={{ dns.fe }}
       - OVERWRITEPROTOCOL=https
       - NEXTCLOUD_DATA_DIR=/mnt/nextcloud
-      - PHP_MEMORY_LIMIT=6G
-      - PHP_UPLOAD_LIMIT=6G
+      - PHP_MEMORY_LIMIT=12G
+      - PHP_UPLOAD_LIMIT=12G
     deploy:
       labels:
         {{ traefik_default_labels }}
