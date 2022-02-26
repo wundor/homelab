@@ -113,6 +113,9 @@ sections:
       - title: 'Slides'
         icon: 'slides.svg'
         url: 'https://slides.testchamber.one'
+      - title: 'Chat'
+        icon: 'element.svg'
+        url: 'https://chat.testchamber.one'
   - name: 'TTRPG'
     items:
       - title: 'RPG Basement'

@@ -27,6 +27,7 @@
     - jellyfin
     - nextcloud
     - monitoring
+    - matrix
     - qbittorrent
 
     # - syncthing

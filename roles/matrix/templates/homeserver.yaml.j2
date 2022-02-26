@@ -1,0 +1,61 @@
+server_name: "matrix.{{ domain }}"
+
+pid_file: /app/homeserver.pid
+
+web_client_location: https://element.{{ domain }}/
+
+public_baseurl: https://synapse.{{ domain }}/
+
+report_stats: true
+
+enable_registration: true
+
+listeners:
+  - port: {{ exposed_port }}
+    tls: false
+    type: http
+    x_forwarded: true
+
+    resources:
+      - names: [client, federation]
+        compress: false
+
+retention:
+  enabled: true
+
+federation_ip_range_blacklist:
+  - '127.0.0.0/8'
+  - '10.0.0.0/8'
+  - '172.16.0.0/12'
+  - '192.168.0.0/16'
+  - '100.64.0.0/10'
+  - '169.254.0.0/16'
+  - '::1/128'
+  - 'fe80::/64'
+  - 'fc00::/7'
+
+database:
+  name: psycopg2
+  args:
+    user: {{ service }}
+    password: {{ db_pass }}
+    database: {{ service }}
+    host: postgres   
+    cp_min: 5
+    cp_max: 10
+
+registration_shared_secret: "{{ registration_shared_secret }}"
+macaroon_secret_key: "{{ macaroon_secret_key }}"
+form_secret: "{{ form_secret }}"
+
+log_config: "/data/matrix.testchamber.one.log.config"
+signing_key_path: "/data/matrix.testchamber.one.signing.key"
+media_store_path: "/app/media_store"
+
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+redis:
+  enabled: true
+  host: redis
+  port: 6379

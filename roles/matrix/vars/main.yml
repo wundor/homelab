@@ -1,0 +1,21 @@
+---
+version:
+  server: 'v1.53.0'
+  element: 'v1.10.4'
+dns:
+  fe: matrix.{{ domain }}
+  server: synapse.{{ domain }}
+  element: chat.{{ domain }}
+  admin: synapseadmin.{{ domain }}
+exposed_port: 8008
+
+# zfs:
+#   docs: paperless/docs
+#   app: paperless/app
+#   postgres_dump: paperless/postgres_dump
+
+server_key: '{{ vault_server_key }}'
+db_pass: '{{ vault_db_pass }}'
+registration_shared_secret: '{{ vault_registration_shared_secret }}'
+macaroon_secret_key: '{{ vault_macaroon_secret_key }}'
+form_secret: '{{ vault_form_secret }}'

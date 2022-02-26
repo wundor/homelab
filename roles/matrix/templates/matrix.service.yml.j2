@@ -1,0 +1,110 @@
+---
+{{ ansible_managed | comment }}
+version: "{{ compose_version }}"
+services:
+  redis:
+    image: redis:6
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    networks:
+      - default
+
+  {{ service }}:
+    image: matrixdotorg/synapse:{{ version['server'] }}
+    volumes:
+      - {{ service_path }}:/data
+      - type: volume
+        source: app
+        target: /app
+    environment:
+      - SYNAPSE_DATA_DIR=/app
+      - UID=1000
+      - GID=1000
+      - TZ=Europe/Moscow
+    networks:
+      - default
+      - {{ traefik_network }}
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-server.rule=Host(`{{ dns['server'] }}`)'
+        - 'traefik.http.routers.{{ service }}-server.tls=true'
+        - 'traefik.http.routers.{{ service }}-server.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-server.loadbalancer.server.port={{ exposed_port }}'
+
+  nginx:
+    image: nginx
+    volumes:
+      - {{ service_path }}/nginx-matrix.conf:/etc/nginx/conf.d/matrix.conf:ro
+      - {{ service_path }}/nginx-server:/var/www/.well-known/matrix/server:ro
+      - {{ service_path }}/nginx-client:/var/www/.well-known/matrix/client:ro
+    networks:
+      - default
+      - {{ traefik_network }}
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-proxy.rule=Host(`{{ dns['fe'] }}`)'
+        - 'traefik.http.routers.{{ service }}-proxy.tls=true'
+        - 'traefik.http.routers.{{ service }}-proxy.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-proxy.loadbalancer.server.port=80'
+
+  element:
+    image: vectorim/element-web:{{ version['element'] }}
+    volumes:
+      - {{ service_path }}/element.config.json:/app/config.json:ro
+    networks:
+      - default
+      - {{ traefik_network }}
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-element.rule=Host(`{{ dns['element'] }}`)'
+        - 'traefik.http.routers.{{ service }}-element.tls=true'
+        - 'traefik.http.routers.{{ service }}-element.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-element.loadbalancer.server.port=80'
+
+  admin:
+    image: awesometechnologies/synapse-admin
+    networks:
+      - {{ traefik_network }}
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.docker.network={{ traefik_network }}'
+        - 'traefik.http.routers.{{ service }}-admin.rule=Host(`{{ dns['fe'] }}`) && (Path(`/_matrix`) || Path(`/_synapse/admin`))'
+        - 'traefik.http.routers.{{ service }}-admin.tls=true'
+        - 'traefik.http.routers.{{ service }}-admin.entrypoints=https'
+        - 'traefik.http.services.{{ service }}-admin.loadbalancer.server.port=80'
+
+
+  postgres:
+    image: postgres:13
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+      # {{ remote_volume }}
+        # source: postgres_dump
+        # target: /dump
+    networks:
+      - default
+    environment:
+      POSTGRES_DB: {{ service }}
+      POSTGRES_USER: {{ service }}
+      POSTGRES_PASSWORD: {{ db_pass }}
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
+
+
+volumes:
+  app:
+  postgres:
+
+networks:
+  {{ traefik_network }}:
+    external: true

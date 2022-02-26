@@ -1,5 +1,5 @@
 ---
-version: '1.0.4'
+version: '1.0.8'
 dns:
   fe: meal.{{ lan }}
 exposed_port: 80

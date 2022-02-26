@@ -1,0 +1,54 @@
+---
+- set_fact:
+    service: '{{ role_name }}'
+  tags: ['matrix', 'matrix-backup']
+
+- name: Include vault
+  include_vars: vault.yml
+  tags: ['matrix', 'matrix-backup']
+
+- import_role:
+    name: matrix
+    tasks_from: backup
+  tags: ['never', 'matrix-backup']
+
+- block:
+    - import_role:
+        name: services
+        tasks_from: prepare
+
+    - name: Generate configs
+      template:
+        src: '{{ item.src }}'
+        dest: '{{ item.dest }}'
+      loop:
+        - { src: 'homeserver.yaml.j2', dest: '{{ service_path }}/homeserver.yaml' }
+        - { src: 'matrix.testchamber.one.signing.key.j2', dest: '{{ service_path }}/matrix.testchamber.one.signing.key' }
+        - { src: 'nginx/matrix.conf.j2', dest: '{{ service_path }}/nginx-matrix.conf' }
+        - { src: 'nginx/server.j2', dest: '{{ service_path }}/nginx-server' }
+        - { src: 'nginx/client.j2', dest: '{{ service_path }}/nginx-client' }
+        - { src: 'element.config.json.j2', dest: '{{ service_path }}/element.config.json' }
+      notify:
+        - restart_main_service
+
+    - name: Copy log config
+      copy:
+        src: 'matrix.testchamber.one.log.config'
+        dest: '{{ service_path }}/matrix.testchamber.one.log.config'
+      notify:
+        - restart_main_service
+
+    - name: Create media dir
+      shell: '{{ item }}'
+      loop:
+        - mkdir -p /var/lib/docker/volumes/matrix_app/_data/media_store
+        - chown 1000:1000 /var/lib/docker/volumes/matrix_app/_data/media_store
+      become: true
+      notify:
+        - restart_main_service
+
+    - import_role:
+        name: services
+        tasks_from: uplift
+
+  tags: matrix
