@@ -9,7 +9,7 @@
     "location": {
       "address": "Nizhny Novgorod"
     },
-    "summary": "From the start as QA Automation Engineer I was focused on automating routine stuff and dealing with the infrastructure so it was natural for me to transition into DevOps field after some time.",
+    "summary": "From the start in IT as QA Automation Engineer I was mainly focused on automating routine stuff and dealing with the infrastructure, so it was natural for me to transition into DevOps field after some time. Now I help to create CI/CD processes for cloud-native applications that make development experience easier, cut cost and ensure availability.",
     "profiles": [
       {
         "network": "linkedin",
@@ -26,12 +26,15 @@
       "endDate": "",
       "summary": "Developing and supporting CI/CD infrastructure and assisting with migrating applications to the cloud",
       "highlights": [
+        "Managing the small team of DevOps engineers",
         "Application migration from on-premises docker swarm to AWS Fargate",
-        "Creating from scratch and supporting the infrastructure of small serverless application using AWS and serverless framework",
-        "Creating and support of CI/CD infrastructure based on Jenkins and Gitlab-CI",
-        "Linux hosts administration, VMs and bare-metal",
+        "Setting up infrastructure as code (CDK) for number of web applications using AWS CloudFront",
+        "Creating and supporting the infrastructure for small serverless application using AWS and serverless framework",
+        "K8S operations: GKE, Knative, Kong, Istio",
+        "Creating and support of CI/CD infrastructure: Jenkins, Gitlab-CI and Tekton",
         "Creating Ansible playbooks for infrastructure management and application deployment",
-        "Setting up small infrastructure monitoring system with Prometheus + Grafana"
+        "Setting up small infrastructure monitoring system with Prometheus + Grafana",
+        "Some experience with nodejs development (adapting services to the cloud environment during the migration)"
       ]
     },
     {
@@ -41,13 +44,13 @@
       "endDate": "2017-02",
       "summary": "Writing and performing automated tests and dealing with corresponding infrastructure",
       "highlights": [
-        "Creating and supporting automatic functional tests in Java",
-        "Creating and supporting automatic E2E tests in JavaScript+Protractor",
-        "Experience with network protocols: LACP, VRRP, BGP, RSTP (L2-L3 of the OSI model)",
-        "Working with traffic generators and Wireshark",
-        "Some experience working with Valgrind",
+        "Writing and supporting automatic E2E tests written in JavaScript+Protractor",
+        "Uplifting and supporting infrastructure for automatic testing (Selenium hub + browser containers in Docker swarm)",
         "Adapting test strategy due to changes in application architecture (moving to microservices)",
-        "Creating and maintaining automated e2e tests infrastructure with Selenium grid and Docker"
+        "Creating and supporting automatic functional tests written in Java",
+        "Experience with network protocols: LACP, VRRP, BGP, RSTP (L2-L3 of the OSI model)",
+        "Some experience with traffic generators and Wireshark",
+        "Experience with Linux"
       ]
     }
   ],
@@ -64,7 +67,7 @@
     {
       "name": "CI/CD",
       "level": "Master",
-      "keywords": ["Ansible", "Jenkins", "Gitlab CI", "Prometheus"]
+      "keywords": ["Ansible", "Jenkins", "Gitlab CI", "Prometheus", "Tekton"]
     },
     {
       "name": "Containers",
@@ -99,7 +102,7 @@
     },
     {
       "language": "English",
-      "fluency": "Upper Intermediate"
+      "fluency": "Advanced (C1)"
     }
   ],
   "meta": {
