@@ -1,7 +1,8 @@
 ---
-version: '1.18'
-dns: 
+version: '1.19'
+dns:
   fe: sync.{{ lan }}
 exposed_port: 8384
 zfs:
   app: syncthing
+  data: sync

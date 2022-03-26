@@ -29,8 +29,8 @@
     - monitoring
     - matrix
     - qbittorrent
+    - syncthing
 
-    # - syncthing
     # - portainer
     # - rss_my_ass
     # - speedtest

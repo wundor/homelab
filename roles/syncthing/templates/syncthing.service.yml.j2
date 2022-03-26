@@ -5,14 +5,13 @@ services:
   {{ service }}:
     image: syncthing/syncthing:{{ version }}
     volumes:
-      {{ nfs_volume }}
-        source: {{ service }}_archive
-        target: /mnt/archive
-      {{ nfs_volume }}
-        source: {{ service }}_config
+      {{ remote_volume }}
+        source: config
         target: /var/syncthing
+      {{ remote_volume }}
+        source: data
+        target: /sync
     deploy:
-      {{ placement }}
       labels:
         {{ traefik_default_labels }}
         - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
@@ -22,12 +21,12 @@ services:
       - 1.1.1.1
 
 volumes:
-  {{ service }}_archive:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/archive'
-  {{ service }}_config:
+  config:
     {{ nfs_volume }}
       device: ':/{{ zfs_pool }}/{{ zfs.app }}'
+  data:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ zfs.data }}'
 
 networks:
   {{ traefik_network }}:
