@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "r": "reveal-md"
+    "r": "cp reveal-slides.json reveal.json && reveal-md",
+    "r:build": "reveal-md"
   },
   "author": "",
   "license": "ISC",

@@ -1,4 +1,5 @@
 ---
+version: '1'
 dns:
   deck: deck.{{ domain }}
   slides: slides.{{ domain }}

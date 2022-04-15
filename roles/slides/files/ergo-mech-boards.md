@@ -350,6 +350,8 @@ Notes: Можно собрать маленький конвернер, кото
 
 ---
 
-спасибо за внимание  
+спасибо за внимание
 
 tg: @wundor
+
+<!-- .slide: data-background-image="./img/end.png"  data-background-size="contain" data-background-opacity="0.6" -->

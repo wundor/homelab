@@ -7,41 +7,42 @@
         name: services
         tasks_from: prepare
 
-    - name: Build deck - version for presentation
-      shell:
-        cmd: '{{ item }}'
-        chdir: '{{ role_path }}/files'
-      loop:
-        - npm ci
-        - cp reveal-deck.json reveal.json
-        - npm run r -- ./ --static _deck --absolute-url https://{{ dns.deck }} --featured-slide 1
+    # - name: Build deck - version for presentation
+    #   delegate_to: localhost
+    #   shell: 'docker build -t {{ registry.url }}/{{ item.t }}:{{ version }} --target {{ item.t }} --build-arg URL={{ item.u }}'
+    #   loop:
+    #     - { t: 'deck', u: '{{ dns.deck }}' }
+    #     - { t: 'slides', u: '{{ dns.slides }}' }
+
+    # - name: Build slides - version for later watching
+    #   shell: 'docker build -t {{ registry.url }}/slides:{{ version }} --target slides --build-arg URL=https://{{ dns.slides }}'
+    #   delegate_to: localhost
+
+    - name: Log into my registry
+      docker_login:
+        registry_url: '{{ registry.url }}'
+        username: admin
+        password: '{{ registry.pass }}'
+        reauthorize: yes
       delegate_to: localhost
 
-    - name: Build slides - version for later watching
-      shell:
-        cmd: '{{ item }}'
-        chdir: '{{ role_path }}/files'
-      loop:
-        - npm ci
-        - cp reveal-slides.json reveal.json
-        - npm run r -- ./ --static _slides --absolute-url https://{{ dns.slides }} --featured-slide 1
+    - name: Build images and push them to my private repo
+      docker_image:
+        build:
+          path: './roles/slides/files'
+          target: '{{ item.t }}'
+          args:
+            URL: '{{ item.u }}'
+        name: '{{ registry.url }}/{{ item.t }}'
+        force_source: true
+        force_tag: true
+        push: true
+        tag: '{{ version }}'
+        source: build
       delegate_to: localhost
-
-    - name: Copy deck
-      # copy is really slow with directories
-      ansible.posix.synchronize:
-        src: '_deck/'
-        dest: '{{ service_path }}/deck'
-      notify:
-        - restart_main_service
-
-    - name: Copy slides
-      # copy is really slow with directories
-      ansible.posix.synchronize:
-        src: '_slides/'
-        dest: '{{ service_path }}/slides'
-      notify:
-        - restart_main_service
+      loop:
+        - { t: 'deck', u: '{{ dns.deck }}' }
+        - { t: 'slides', u: '{{ dns.slides }}' }
 
     - import_role:
         name: services

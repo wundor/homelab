@@ -2,13 +2,8 @@
 {{ ansible_managed | comment }}
 version: "{{ compose_version }}"
 services:
-  {{ service }}deck:
-    image: nginx
-    volumes:
-      - type: bind
-        source: {{ service_path }}/deck
-        target: /usr/share/nginx/html
-        read_only: true
+  deck:
+    image: {{ registry.url }}/deck:{{ version }}
     deploy:
       labels:
         - 'traefik.enable=true'
@@ -20,13 +15,8 @@ services:
     networks:
       - {{ traefik_network }}
 
-  {{ service }}slides:
-    image: nginx
-    volumes:
-      - type: bind
-        source: {{ service_path }}/slides
-        target: /usr/share/nginx/html
-        read_only: true
+  slides:
+    image: {{ registry.url }}/slides:{{ version }}
     deploy:
       labels:
         - 'traefik.enable=true'
