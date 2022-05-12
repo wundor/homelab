@@ -6,11 +6,8 @@ services:
     image: syncthing/syncthing:{{ version }}
     volumes:
       {{ remote_volume }}
-        source: config
-        target: /var/syncthing
-      {{ remote_volume }}
         source: data
-        target: /sync
+        target: /var/syncthing
     deploy:
       labels:
         {{ traefik_default_labels }}
@@ -21,12 +18,9 @@ services:
       - 1.1.1.1
 
 volumes:
-  config:
-    {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ zfs.app }}'
   data:
     {{ nfs_volume }}
-      device: ':/{{ zfs_pool }}/{{ zfs.data }}'
+      device: ':/{{ zfs_pool }}/{{ zfs.app }}'
 
 networks:
   {{ traefik_network }}:

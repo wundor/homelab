@@ -10,14 +10,14 @@ services:
       - default
 
   gotenberg:
-    image: thecodingmachine/gotenberg:6
-    environment:
-      DISABLE_GOOGLE_CHROME: 1
+    image: thecodingmachine/gotenberg:7.4
+    # environment:
+      # DISABLE_GOOGLE_CHROME: 1
     networks:
       - default
 
   tika:
-    image: apache/tika
+    image: ghcr.io/paperless-ngx/tika:latest
     networks:
       - default
 
@@ -40,7 +40,7 @@ services:
       POSTGRES_PASSWORD: {{ db_pass }}
 
   {{ service }}:
-    image: jonaswinkler/paperless-ng:{{ version }}
+    image: ghcr.io/paperless-ngx/paperless-ngx:{{ version }}
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000']
     volumes:
