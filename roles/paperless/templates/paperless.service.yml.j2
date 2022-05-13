@@ -52,6 +52,7 @@ services:
         target: /usr/src/paperless/media
     environment:
       PAPERLESS_TIKA_ENABLED: '1'
+      PAPERLESS_URL: 'https://{{ dns.fe }}'
       PAPERLESS_CONSUMER_DELETE_DUPLICATES: 'true'
       PAPERLESS_SECRET_KEY: '{{ secret_key }}'
       PAPERLESS_DBHOST: 'postgres'
