@@ -1,21 +1,28 @@
 ---
 - set_fact:
-    service: '{{ role_name }}'
-  tags: ['qbittorrent', 'qbittorrent-backup']
+    service: "{{ role_name }}"
+  tags: ["qbittorrent", "qbittorrent-backup"]
 
 - name: Include vault
   include_vars: vault.yml
-  tags: ['qbittorrent', 'qbittorrent-backup']
+  tags: ["qbittorrent", "qbittorrent-backup"]
 
 - import_role:
     name: qbittorrent
     tasks_from: backup
-  tags: ['never', 'qbittorrent-backup']
+  tags: ["never", "qbittorrent-backup"]
 
 - block:
     - import_role:
         name: services
         tasks_from: prepare
+
+    - name: Add port forwarding rules
+      raw: "ip static {{ item.protocol }} PPPoE0 {{ item.port }} {{ hostvars[groups['swarm'][0]]['ansible_host'] }} {{ item.port }}"
+      loop:
+        - { port: "51413", protocol: "tcp" }
+        - { port: "51413", protocol: "udp" }
+      delegate_to: eq-router.lan.testchamber.one
 
     - import_role:
         name: services

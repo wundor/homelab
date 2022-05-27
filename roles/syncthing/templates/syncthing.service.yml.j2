@@ -12,10 +12,17 @@ services:
       labels:
         {{ traefik_default_labels }}
         - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
+    ports:
+      - target: 22000
+        published: 22000
+      - target: 22000
+        published: 22000
+        protocol: udp
+      - target: 21027
+        published: 21027
+        protocol: udp
     networks:
       - {{ traefik_network }}
-    dns:
-      - 1.1.1.1
 
 volumes:
   data:

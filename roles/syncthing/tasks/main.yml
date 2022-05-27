@@ -1,11 +1,19 @@
 ---
 - block:
     - set_fact:
-        service: '{{ role_name }}'
+        service: "{{ role_name }}"
 
     - import_role:
         name: services
         tasks_from: prepare
+
+    - name: Add port forwarding rules
+      raw: "ip static {{ item.protocol }} PPPoE0 {{ item.port }} {{ hostvars[groups['swarm'][0]]['ansible_host'] }} {{ item.port }}"
+      loop:
+        - { port: "22000", protocol: "tcp" }
+        - { port: "22000", protocol: "udp" }
+        - { port: "21027", protocol: "udp" }
+      delegate_to: eq-router.lan.testchamber.one
 
     - import_role:
         name: services

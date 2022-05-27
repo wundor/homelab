@@ -1,21 +1,28 @@
 ---
 - block:
     - set_fact:
-        service: '{{ role_name }}'
+        service: "{{ role_name }}"
 
     - import_role:
         name: services
         tasks_from: prepare
 
+    - name: Add port forwarding rules
+      raw: "ip static {{ item.protocol }} PPPoE0 {{ item.port }} {{ hostvars[groups['swarm'][0]]['ansible_host'] }} {{ item.port }}"
+      loop:
+        - { port: "80", protocol: "tcp" }
+        - { port: "443", protocol: "tcp" }
+      delegate_to: eq-router.lan.testchamber.one
+
     - name: Create certificates directory
       file:
-        path: '{{ service_path }}/certificates'
+        path: "{{ service_path }}/certificates"
         state: directory
 
     - name: Copy config
       copy:
-        src: 'config.yml'
-        dest: '{{ service_path }}/config.yml'
+        src: "config.yml"
+        dest: "{{ service_path }}/config.yml"
       notify:
         - restart_main_service
 
