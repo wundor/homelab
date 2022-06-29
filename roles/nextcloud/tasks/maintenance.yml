@@ -1,5 +1,11 @@
 ---
 - block:
+    - set_fact:
+        service: "{{ role_name }}"
+
+    - name: Include vault
+      include_vars: vault.yml
+
     - name: Generate previews
       shell: |
         {% raw %}docker exec -u 33 $(docker ps -q --filter "name=nextcloud_nextcloud"){% endraw %} {{ item }}
@@ -13,4 +19,4 @@
 
     - name: Healthcheck
       uri:
-        url: '{{ maintenance_healthcheck_url }}'
+        url: "{{ maintenance_healthcheck_url }}"
