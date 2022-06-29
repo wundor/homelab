@@ -16,7 +16,7 @@ services:
       labels:
         {{ traefik_default_labels }}
         - 'traefik.http.routers.{{ service }}.service={{ service }}'
-        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
+{# - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker' #}
         - 'traefik.http.routers.{{ service }}-pub.rule=Host(`{{ dns.public }}`) && Query(`action=display`)'
         - 'traefik.http.routers.{{ service }}-pub.service={{ service }}'
         - 'traefik.http.routers.{{ service }}-pub.tls=true'

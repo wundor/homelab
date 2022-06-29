@@ -1,5 +1,5 @@
 ---
-version: 'latest-2022-01-07'
+version: "latest-2022-04-19"
 dns:
   fe: rss.{{ domain }}
 exposed_port: 80
@@ -7,5 +7,5 @@ exposed_port: 80
 zfs:
   postgres_dump: ttrss/postgres_dump
 
-healthcheck_url: '{{ vault_healthcheck_url }}'
-db_pass: '{{ vault_db_pass }}'
+healthcheck_url: "{{ vault_healthcheck_url }}"
+db_pass: "{{ vault_db_pass }}"

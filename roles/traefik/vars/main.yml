@@ -1,4 +1,4 @@
 ---
-version: v2.5
-dns: 
+version: "2.7"
+dns:
   fe: t.{{ lan }}

@@ -8,21 +8,23 @@ services:
       {{ remote_volume }}
         source: data
         target: /var/syncthing
-    deploy:
-      labels:
-        {{ traefik_default_labels }}
-        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
-    ports:
-      - target: 22000
-        published: 22000
-      - target: 22000
-        published: 22000
-        protocol: udp
-      - target: 21027
-        published: 21027
-        protocol: udp
+    {# deploy: #}
+    {#   labels: #}
+    {#     {{ traefik_default_labels }} #}
+    {#     - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker' #}
+    {# ports: #}
+    {#   - target: 22000 #}
+    {#     published: 22000 #}
+    {#   - target: 22000 #}
+    {#     published: 22000 #}
+    {#     protocol: udp #}
+    {#   - target: 21027 #}
+    {#     published: 21027 #}
+    {#     protocol: udp #}
+
     networks:
-      - {{ traefik_network }}
+      - hostnet
+      {# - {{ traefik_network }} #}
 
 volumes:
   data:
@@ -30,5 +32,9 @@ volumes:
       device: ':/{{ zfs_pool }}/{{ zfs.app }}'
 
 networks:
-  {{ traefik_network }}:
+  hostnet:
     external: true
+    name: host
+{# networks: #}
+{#   {{ traefik_network }}: #}
+{#     external: true #}

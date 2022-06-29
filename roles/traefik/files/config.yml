@@ -3,30 +3,30 @@ http:
   routers:
     proxmox:
       entryPoints:
-        - 'https'
-      rule: 'Host(`pve1.lan.testchamber.one`)'
+        - "https"
+      rule: "Host(`pve1.lan.testchamber.one`)"
       middlewares:
         - default-headers
       tls: {}
       service: proxmox
-    adguard:
+    syncthing:
       entryPoints:
-        - 'https'
-      rule: 'Host(`adguard.lan.testchamber.one`)'
+        - "https"
+      rule: "Host(`sync.lan.testchamber.one`)"
       middlewares:
         - default-headers
       tls: {}
-      service: adguard
+      service: syncthing
   services:
     proxmox:
       loadBalancer:
         servers:
-          - url: 'https://192.168.5.10:8006'
+          - url: "https://192.168.5.10:8006"
         passHostHeader: true
-    adguard:
+    syncthing:
       loadBalancer:
         servers:
-          - url: 'http://192.168.5.91:80'
+          - url: "http://192.168.5.113:8384"
         passHostHeader: true
 
   middlewares:
@@ -51,9 +51,9 @@ http:
     default-whitelist:
       ipWhiteList:
         sourceRange:
-          - '10.0.0.0/8'
-          - '192.168.0.0/16'
-          - '172.16.0.0/12'
+          - "10.0.0.0/8"
+          - "192.168.0.0/16"
+          - "172.16.0.0/12"
 
     secured:
       chain:

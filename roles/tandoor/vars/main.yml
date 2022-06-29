@@ -1,5 +1,5 @@
 ---
-version: '1.0.8'
+version: "1.2.7"
 dns:
   fe: meal.{{ domain }}
 exposed_port: 80
@@ -8,6 +8,6 @@ zfs:
   mediafiles: tandoor/mediafiles
   psql_dump: tandoor/psql_dump
 
-secret_key: '{{ vault_secret_key }}'
-db_pass: '{{ vault_db_pass }}'
-healthcheck_url: '{{ vault_healthcheck_url }}'
+secret_key: "{{ vault_secret_key }}"
+db_pass: "{{ vault_db_pass }}"
+healthcheck_url: "{{ vault_healthcheck_url }}"

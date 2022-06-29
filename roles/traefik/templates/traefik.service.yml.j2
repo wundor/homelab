@@ -67,7 +67,7 @@ services:
         - 'traefik.http.routers.{{ service }}.tls=true'
         - 'traefik.http.routers.{{ service }}.entrypoints=https'
         - 'traefik.http.routers.{{ service }}.service=api@internal'
-        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
+{# - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker' #}
         - 'traefik.http.services.{{ service }}.loadbalancer.server.port=8080'
     networks:
       - {{ traefik_network }}

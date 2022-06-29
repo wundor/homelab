@@ -9,7 +9,7 @@ services:
     deploy:
       labels:
         {{ traefik_default_labels }}
-        - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker'
+{# - 'traefik.http.routers.{{ service }}.middlewares=authelia@docker' #}
     networks:
       - {{ traefik_network }}
 

@@ -9,7 +9,6 @@
 - hosts: swarm
   roles:
     - traefik
-    - authelia
     - dashy
     - gatus
     - cv
@@ -31,6 +30,7 @@
     - qbittorrent
     - syncthing
 
+    # - authelia
     # - portainer
     # - rss_my_ass
     # - speedtest

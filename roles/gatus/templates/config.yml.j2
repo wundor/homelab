@@ -16,12 +16,6 @@ services:
     conditions:
       - '[STATUS] == 200'
       - '[RESPONSE_TIME] < 300'
-  - name: DNS
-    group: lan
-    url: 'tcp://192.168.5.91:53'
-    conditions:
-      - "[CONNECTED] == true"
-    {{ discord_alert }}
   - name: Dashy
     group: lan
     url: 'https://hub.{{ lan }}'
@@ -74,7 +68,7 @@ services:
     {{ default_check }}
   - name: Tandoor
     group: lan
-    url: 'https://meal.{{ lan }}'
+    url: 'https://meal.{{ domain }}'
     {{ default_check }}
   - name: youtube-dl
     group: lan

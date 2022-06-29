@@ -3,124 +3,118 @@ appConfig:
   statusCheck: true
   hideComponents:
     hideSettings: true
-  theme: 'nord'
-  fontAwesomeKey: '0821c65656'
-  layout: 'auto'
-  iconSize: 'large'
+  theme: "nord"
+  fontAwesomeKey: "0821c65656"
+  layout: "auto"
+  iconSize: "large"
 pageInfo:
-  title: 'Testchamber'
+  title: "Testchamber"
   navLinks:
-    - title: 'Home'
-      path: '/'
-    - title: 'About'
-      path: '/about'
-    - title: 'Dashy'
-      path: 'https://github.com/Lissy93/dashy'
-  description: 'No cake this time'
-  footerText: 'No cake this time'
+    - title: "Home"
+      path: "/"
+    - title: "About"
+      path: "/about"
+    - title: "Dashy"
+      path: "https://github.com/Lissy93/dashy"
+  description: "No cake this time"
+  footerText: "No cake this time"
 sections:
-  - name: 'HARDWARE'
+  - name: "HARDWARE"
     items:
-      - title: 'EQ Router'
-        description: 'keenetic viva'
-        icon: 'router.png'
-        url: 'http://eq-router.lan.testchamber.one/'
-      - title: 'Canterlot'
-        description: 'Proxmox'
-        icon: 'proxmox.png'
-        url: 'https://pve1.lan.testchamber.one/'
-      - title: 'NA Router'
-        description: 'tplink archer C7'
-        icon: 'router.png'
-        url: 'http://na-router.lan.testchamber.one/'
-  - name: 'MONITORING'
+      - title: "EQ Router"
+        description: "keenetic viva"
+        icon: "router.png"
+        url: "http://eq-router.lan.testchamber.one/"
+      - title: "Canterlot"
+        description: "Proxmox"
+        icon: "proxmox.png"
+        url: "https://pve1.lan.testchamber.one/"
+      - title: "NA Router"
+        description: "tplink archer C7"
+        icon: "router.png"
+        url: "http://na-router.lan.testchamber.one/"
+  - name: "MONITORING"
     items:
-      - title: 'Grafana'
-        icon: 'grafana.png'
-        url: 'https://mon.lan.testchamber.one/'
-      - title: 'Healthchecks'
-        description: 'Gatus'
-        icon: 'gatus.svg'
-        url: 'https://ping.lan.testchamber.one/'
-      - title: 'Prometheus'
-        icon: 'prometheus.png'
-        url: 'https://prom.lan.testchamber.one/'
-      - title: 'Alertmanager'
-        icon: 'prometheus.png'
-        url: 'https://alerts.lan.testchamber.one/'
-  - name: 'INFRA'
+      - title: "Grafana"
+        icon: "grafana.png"
+        url: "https://mon.lan.testchamber.one/"
+      - title: "Healthchecks"
+        description: "Gatus"
+        icon: "gatus.svg"
+        url: "https://ping.lan.testchamber.one/"
+      - title: "Prometheus"
+        icon: "prometheus.png"
+        url: "https://prom.lan.testchamber.one/"
+      - title: "Alertmanager"
+        icon: "prometheus.png"
+        url: "https://alerts.lan.testchamber.one/"
+  - name: "INFRA"
     items:
-      - title: 'Registry'
-        icon: 'registry.png'
-        url: 'https://registry.lan.testchamber.one/'
-      - title: 'DNS'
-        icon: 'adguard.png'
-        url: 'http://adguard.lan.testchamber.one'
-      - title: 'Jenkins'
-        icon: 'jenkins.svg'
-        url: 'https://ci.lan.testchamber.one'
-      - title: 'Traefik'
-        icon: 'traefik.svg'
-        url: 'https://t.lan.testchamber.one/'
-      - title: 'Authelia'
-        icon: 'authelia.png'
-        url: 'https://auth.lan.testchamber.one/'
-  - name: 'SYNC'
+      - title: "Registry"
+        icon: "registry.png"
+        url: "https://registry.lan.testchamber.one/"
+      - title: "Jenkins"
+        icon: "jenkins.svg"
+        url: "https://ci.lan.testchamber.one"
+      - title: "Traefik"
+        icon: "traefik.svg"
+        url: "https://t.lan.testchamber.one/"
+  - name: "SYNC"
     items:
-      - title: 'EQ'
-        icon: 'syncthing.png'
-        url: 'https://sync.lan.testchamber.one/'
-      - title: 'NA'
-        icon: 'syncthing.png'
-        url: 'http://manehattan.lan.testchamber.one:8384/'
-  - name: 'INTERNAL'
+      - title: "EQ"
+        icon: "syncthing.png"
+        url: "https://sync.lan.testchamber.one/"
+      - title: "NA"
+        icon: "syncthing.png"
+        url: "http://manehattan.lan.testchamber.one:8384/"
+  - name: "INTERNAL"
     items:
-      - title: 'Documents'
-        icon: 'paperless.png'
-        url: 'https://paper.lan.testchamber.one'
-      - title: 'Torrent'
-        icon: 'qbittorrent.svg'
-        url: 'https://p2p.lan.testchamber.one/'
-      - title: 'Theatre'
-        icon: 'jellyfin.png'
-        url: 'http://theatre.lan.testchamber.one/'
-      - title: 'Youtube-dl'
-        icon: 'youtube-dl.png'
-        url: 'https://ss.lan.testchamber.one/'
-  - name: 'EXTERNAL'
+      - title: "Documents"
+        icon: "paperless.png"
+        url: "https://paper.lan.testchamber.one"
+      - title: "Torrent"
+        icon: "qbittorrent.svg"
+        url: "https://p2p.lan.testchamber.one/"
+      - title: "Theatre"
+        icon: "jellyfin.png"
+        url: "http://theatre.lan.testchamber.one/"
+      - title: "Youtube-dl"
+        icon: "youtube-dl.png"
+        url: "https://ss.lan.testchamber.one/"
+  - name: "EXTERNAL"
     items:
-      - title: 'TTRSS'
-        icon: 'ttrss.png'
-        url: 'https://rss.testchamber.one/'
-      - title: 'Etherpad'
-        icon: 'etherpad.png'
-        url: 'https://pad.testchamber.one/'
-      - title: 'Kanboard'
-        icon: 'kanboard.png'
-        url: 'https://kan.testchamber.one/'
-      - title: 'Nextcloud'
-        icon: 'nextcloud.svg'
-        url: 'https://cloud.testchamber.one/'
-      - title: 'Meals'
-        icon: 'tandoor.svg'
-        url: 'https://meal.testchamber.one/'
-      - title: 'Blog'
-        icon: 'hugo.svg'
-        url: 'https://testchamber.one'
-      - title: 'CV'
-        icon: 'cv.png'
-        url: 'https://cv.testchamber.one'
-      - title: 'Slides'
-        icon: 'slides.svg'
-        url: 'https://slides.testchamber.one'
-      - title: 'Chat'
-        icon: 'element.svg'
-        url: 'https://chat.testchamber.one'
-  - name: 'TTRPG'
+      - title: "TTRSS"
+        icon: "ttrss.png"
+        url: "https://rss.testchamber.one/"
+      - title: "Etherpad"
+        icon: "etherpad.png"
+        url: "https://pad.testchamber.one/"
+      - title: "Kanboard"
+        icon: "kanboard.png"
+        url: "https://kan.testchamber.one/"
+      - title: "Nextcloud"
+        icon: "nextcloud.svg"
+        url: "https://cloud.testchamber.one/"
+      - title: "Meals"
+        icon: "tandoor.svg"
+        url: "https://meal.testchamber.one/"
+      - title: "Blog"
+        icon: "hugo.svg"
+        url: "https://testchamber.one"
+      - title: "CV"
+        icon: "cv.png"
+        url: "https://cv.testchamber.one"
+      - title: "Slides"
+        icon: "slides.svg"
+        url: "https://slides.testchamber.one"
+      - title: "Chat"
+        icon: "element.svg"
+        url: "https://chat.testchamber.one"
+  - name: "TTRPG"
     items:
-      - title: 'RPG Basement'
+      - title: "RPG Basement"
         icon: favicon
-        url: 'https://rpgbasement.xyz'
-      - title: 'Podcast hosting'
-        icon: 'podcast.svg'
-        url: 'https://host.rpgbasement.xyz/podcast'
+        url: "https://rpgbasement.xyz"
+      - title: "Podcast hosting"
+        icon: "podcast.svg"
+        url: "https://host.rpgbasement.xyz/podcast"
