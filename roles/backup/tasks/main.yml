@@ -50,8 +50,6 @@
         # restic_cmd: 'RESTIC_PASSWORD={{ restic.pass }} B2_ACCOUNT_ID={{ b2.account_id }} B2_ACCOUNT_KEY={{ b2.account_key }} {{ restic.path }} -r b2:{{ bucket }}'
         restic_cmd: "RESTIC_PASSWORD={{ restic.pass }} AWS_ACCESS_KEY_ID={{ s3.id }} AWS_SECRET_ACCESS_KEY={{ s3.key }} AWS_DEFAULT_REGION=ru-central1 RESTIC_REPOSITORY=s3:{{ s3.endpoint }}/{{ bucket }} {{ restic.path }}"
 
-    - debug: var=restic_cmd
-
     - name: Create {{ bucket }} s3 bucket
       amazon.aws.aws_s3:
         bucket: "{{ bucket }}"
