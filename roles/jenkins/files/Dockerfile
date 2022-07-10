@@ -1,10 +1,10 @@
-FROM jenkins/jenkins:2.319.1-lts
+FROM jenkins/jenkins:2.346.1-lts
 
 USER root
 RUN apt update && \
     apt install python3-pip -y && \
     apt clean && \
-    pip3 install ansible
+    pip3 install ansible boto3
 
 ADD roles/host_setup/files/ssh_config /etc/ssh/ssh_config
 ADD roles/host_setup/files/ci .vault_pass /lab/

@@ -1,5 +1,5 @@
 ---
-version: '4' # I'm using my custom dockerfile
+version: "6" # I'm using my custom dockerfile
 dns:
   fe: ci.{{ lan }}
 exposed_port: 8080
@@ -7,4 +7,4 @@ exposed_port: 8080
 zfs:
   config: jenkins
 
-healthcheck_url: '{{ vault_healthcheck_url }}'
+healthcheck_url: "{{ vault_healthcheck_url }}"
