@@ -12,10 +12,20 @@ route:
     receiver: null
   - match:
       severity: page
-    receiver: discord_webhook
+    receiver: ntfy
 {% raw %}
 receivers:
 - name: 'null'
+- name: 'ntfy'
+  webhook_configs:
+  - url: https://derpy.testchamber.one/alerts
+    send_resolved: true
+    http_config:
+      basic_auth:
+        username: wundor
+{% endraw %}
+        password: {{ vault_ntfy_pass }}
+{% raw %}
 - name: 'discord_webhook'
   webhook_configs:
   - url: http://discord:9094

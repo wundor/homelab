@@ -1,16 +1,16 @@
 ---
-version: v3.4.0
+version: v4.0.0
 dns:
   fe: ping.{{ lan }}
 exposed_port: 8080
 
-discord_webhook_url: '{{ vault_discord_webhook_url }}'
-discord_alert: |
+discord_webhook_url: "{{ vault_discord_webhook_url }}"
+default_alert: |
   alerts:
-        - type: discord
+        - type: custom
           enabled: true
           send-on-resolved: true
 default_check: |
-  {{ discord_alert }}
+  {{ default_alert }}
       conditions:
         - '[STATUS] == 200'

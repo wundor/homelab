@@ -9,11 +9,11 @@ exposed_port:
   prometheus: 9090
 
 grafana:
-  version: '8.0.5'
+  version: "8.5.9"
   username: admin
-  password: '{{ vault_grafana_password }}'
+  password: "{{ vault_grafana_password }}"
 alertmanager:
-  version: 'v0.22.2'
-  discord_webhook: '{{ vault_discord_webhook }}'
+  version: "v0.24.0"
+  discord_webhook: "{{ vault_discord_webhook }}"
 prometheus:
-  version: 'v2.28.1'
+  version: "v2.37.0"

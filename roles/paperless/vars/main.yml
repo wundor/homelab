@@ -1,5 +1,5 @@
 ---
-version: "1.7.1"
+version: "1.7.1" # ghcr.io/paperless-ngx/paperless-ngx
 dns:
   fe: paper.{{ lan }}
 exposed_port: 8000

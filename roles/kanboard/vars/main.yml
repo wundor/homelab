@@ -1,5 +1,5 @@
 ---
-version: v1.2.21
+version: v1.2.22
 dns:
   fe: kan.{{ domain }}
 exposed_port: 80
@@ -8,4 +8,4 @@ zfs:
   app: kanboard/app
   plugins: kanboard/plugins
 
-healthcheck_url: '{{ vault_healthcheck_url }}'
+healthcheck_url: "{{ vault_healthcheck_url }}"

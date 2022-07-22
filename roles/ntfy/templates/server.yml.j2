@@ -1,0 +1,15 @@
+---
+base-url: "https://{{ domain  }}"
+behind-proxy: true
+cache-file: "/var/cache/ntfy/cache.db"
+attachment-cache-dir: "/var/cache/ntfy/attachments"
+auth-file: "/var/cache/ntfy/user.db" # do this in container: ntfy user add --role=admin wundor
+auth-default-access: "deny-all"
+keepalive-interval: "45s"
+{# smtp-sender-addr: "server:port" #}
+{# smtp-sender-user: "user" #}
+{# smtp-sender-pass: "password" #}
+{# smtp-sender-from: "derpy@{{ domain }}" #}
+{# smtp-server-listen: ":25" #}
+{# smtp-server-domain: "{{ domain }}" #}
+{# smtp-server-addr-prefix: "derpy-" #}

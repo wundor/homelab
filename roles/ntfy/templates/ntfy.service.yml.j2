@@ -1,0 +1,34 @@
+{{ ansible_managed | comment }}
+---
+version: '{{ compose_version }}'
+services:
+  {{ service }}:
+    image: {{ image }}
+    command:
+      - serve
+    environment:
+      - TZ=Europe/Moscow
+    volumes:
+      {{ remote_volume }}
+        source: app
+        target: /var/cache/ntfy
+      - type: bind
+        source: {{ service_path }}/server.yml
+        target: /etc/ntfy/server.yml
+        read_only: true
+    deploy:
+      labels:
+        {{ traefik_default_labels }}
+    networks:
+      - {{ traefik_network }}
+
+networks:
+  {{ traefik_network }}:
+    external: true
+
+volumes:
+{% for (key,value) in zfs.items() %}
+  {{ key }}:
+    {{ nfs_volume }}
+      device: ':/{{ zfs_pool }}/{{ value }}'
+{% endfor %}

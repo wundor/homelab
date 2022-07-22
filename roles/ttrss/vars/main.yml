@@ -1,5 +1,5 @@
 ---
-version: "latest-2022-04-19"
+version: "latest-2022-04-19" # wangqiru/ttrss
 dns:
   fe: rss.{{ domain }}
 exposed_port: 80

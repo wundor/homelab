@@ -3,13 +3,23 @@ metrics: false # Whether to expose metrics at /metrics
 alerting:
   discord:
     webhook-url: '{{ discord_webhook_url }}'
+  custom:
+    url: "https://wundor:{{ vault_ntfy_pass }}@derpy.{{ domain }}/alerts"
+    method: "POST"
+    body: "[ALERT_TRIGGERED_OR_RESOLVED]: [ENDPOINT_NAME] - [ALERT_DESCRIPTION]"
+    default-alert:
+      enabled: true
+      description: "health check failed"
+      send-on-resolved: true
+      failure-threshold: 2
+      success-threshold: 2
 
 services:
   - name: Narnia
     url: 'http://na-router.{{ lan }}'
     group: lan
     alerts:
-      - type: discord
+      - type: custom
         enabled: true
         description: 'Narnia is unavailable'
         send-on-resolved: true

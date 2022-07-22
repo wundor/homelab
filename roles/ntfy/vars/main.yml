@@ -1,0 +1,8 @@
+---
+image: "binwiederhier/ntfy:v1.27.2"
+dns:
+  fe: derpy.{{ domain }}
+exposed_port: 80
+
+zfs:
+  app: ntfy
